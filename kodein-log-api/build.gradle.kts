@@ -9,7 +9,5 @@ kodein {
         }
         add(kodeinTargets.js)
         add(kodeinTargets.native.allNonWeb)
-
-        println(sourceSets.names.joinToString())
     }
 }

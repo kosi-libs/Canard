@@ -13,7 +13,7 @@ actual fun currentTimeStr(): String {
 
         val chars = allocArray<ByteVar>(100)
 
-        strftime(chars, 99, "%Y/%m/%d %H:%M:%S", info)
+        strftime(chars, 99.convert(), "%Y/%m/%d %H:%M:%S", info)
 
         return chars.toKString() + ":" + ms.toString().padStart(3, '0')
     }
