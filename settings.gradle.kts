@@ -15,5 +15,6 @@ rootProject.name = "Kodein-Log"
 include(
         "kodein-log-api",
         ":frontend:kodein-log-frontend-print",
+        ":frontend:kodein-log-frontend-android",
         ""
 )
