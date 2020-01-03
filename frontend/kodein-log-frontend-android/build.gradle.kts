@@ -4,6 +4,6 @@ plugins {
 
 kodeinLib {
     dependencies {
-        api(project(":kodein-log-api") target "jvm")
+        api(project(":kodein-log") target "jvm")
     }
 }
