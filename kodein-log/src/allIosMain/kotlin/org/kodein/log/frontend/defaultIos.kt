@@ -2,4 +2,4 @@ package org.kodein.log.frontend
 
 import org.kodein.log.LogFrontend
 
-actual val defaultLogFrontend: LogFrontend = TODO()
+actual val defaultLogFrontend: LogFrontend = iosFrontend

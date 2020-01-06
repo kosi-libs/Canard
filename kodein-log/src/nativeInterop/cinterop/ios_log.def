@@ -1,0 +1,8 @@
+package = org.kodein.log.darwin
+---
+
+#include <os/log.h>
+
+void ios_log(os_log_t log, os_log_type_t type, const char *msg) {
+    os_log_with_type(log, type, "%s", msg);
+}

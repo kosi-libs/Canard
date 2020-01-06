@@ -27,6 +27,8 @@ kodein {
             main { dependsOn(defaultNativeMain) }
         }
 
-        add(kodeinTargets.native.allIos)
+        add(kodeinTargets.native.allIos) {
+            mainCompilation.cinterops.create("ios_log")
+        }
     }
 }

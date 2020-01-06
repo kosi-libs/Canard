@@ -23,8 +23,12 @@ class Logger(@PublishedApi internal val from: KClass<*>, frontEnds: Collection<L
 
     data class Entry(val level: Level, val ex: Throwable? = null, val meta: Map<String, Any> = emptyMap())
 
+    @PublishedApi
+    internal fun createEntry(level: Level, error: Throwable? = null, meta: Map<String, Any>): Entry? =
+            filters.fold(Entry(level, error, meta)) { entry, filter -> filter(from, entry) ?: return null  }
+
     inline fun log(level: Level, error: Throwable? = null, meta: Map<String, Any> = emptyMap(), msgCreator: () -> String? = { null }) {
-        val entry = filters.fold(Entry(level, error, meta)) { entry, filter -> filter(from, entry) ?: return }
+        val entry = createEntry(level, error, meta) ?: return
         val msg = msgCreator()
         frontends.forEach { it(entry, msg) }
     }
