@@ -32,3 +32,8 @@ kodein {
         }
     }
 }
+
+kodeinUpload {
+    name = "Kodein-Log"
+    description = "Kodein Log Library"
+}
