@@ -23,7 +23,7 @@ kodein {
             dependsOn(sourceSets["commonMain"])
         }
 
-        add(kodeinTargets.native.allDesktop + kodeinTargets.native.allEmbeddedLinux + kodeinTargets.native.allAndroid) {
+        add(kodeinTargets.native.allDesktop + kodeinTargets.native.allEmbeddedLinux) {
             main { dependsOn(defaultNativeMain) }
         }
 
