@@ -4,7 +4,7 @@ import org.kodein.log.Logger
 import org.kodein.log.LogFrontend
 
 
-val consoleFrontend: LogFrontend = { from ->
+public val consoleFrontend: LogFrontend = { from ->
     val fromName = from.js.name
     { e, msg ->
         val logMsg =

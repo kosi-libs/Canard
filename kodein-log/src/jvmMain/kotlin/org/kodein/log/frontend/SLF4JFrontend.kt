@@ -24,7 +24,7 @@ private val SLF4JMapperFrontend: LogFrontend = { from ->
     })
 }
 
-val SLF4JFrontend by lazy {
+public val SLF4JFrontend: LogFrontend by lazy {
     try {
         Class.forName("org.slf4j.impl.StaticLoggerBinder")
         SLF4JMapperFrontend

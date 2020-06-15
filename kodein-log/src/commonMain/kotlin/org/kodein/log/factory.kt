@@ -4,20 +4,21 @@ import org.kodein.log.frontend.defaultLogFrontend
 import kotlin.reflect.KClass
 
 
-interface LoggerFactory {
-    fun newLogger(from: KClass<*>): Logger
+public interface LoggerFactory {
+    public fun newLogger(from: KClass<*>): Logger
 
-    companion object {
-        operator fun invoke(factory: (KClass<*>) -> Logger) = object : LoggerFactory {
+    public companion object {
+        public operator fun invoke(factory: (KClass<*>) -> Logger): LoggerFactory = object : LoggerFactory {
             override fun newLogger(from: KClass<*>) = factory(from)
         }
 
-        operator fun invoke(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()) = LoggerFactory {
+        public operator fun invoke(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()): LoggerFactory = LoggerFactory {
             Logger(it, frontends, filters)
         }
 
-        val default = LoggerFactory { Logger(it, listOf(defaultLogFrontend)) }
+        public val default: LoggerFactory = LoggerFactory { Logger(it, listOf(defaultLogFrontend)) }
     }
 }
 
-inline fun <reified T> LoggerFactory.newLogger() = newLogger(T::class)
+public inline fun <reified T> LoggerFactory.newLogger(): Logger = newLogger(T::class)
+public inline fun <reified T> T.newLogger(factory: LoggerFactory): Logger = factory.newLogger(T::class)

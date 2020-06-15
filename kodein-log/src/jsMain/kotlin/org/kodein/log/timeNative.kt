@@ -2,7 +2,7 @@ package org.kodein.log
 
 import kotlin.js.Date
 
-actual fun currentTimeStr(): String = Date(Date.now()).let {
+public actual fun currentTimeStr(): String = Date(Date.now()).let {
     val Y = it.getFullYear().toString()
     val M = it.getMonth().inc().toString().padStart(2, '0')
     val D = it.getDate().toString().padStart(2, '0')

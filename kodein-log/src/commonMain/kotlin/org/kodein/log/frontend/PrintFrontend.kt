@@ -6,7 +6,7 @@ import org.kodein.log.currentTimeStr
 import org.kodein.log.platformName
 
 
-val printFrontend: LogFrontend = { f ->
+public val printFrontend: LogFrontend = { f ->
     val platform = f.platformName
 
     { e, msg ->

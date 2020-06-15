@@ -5,4 +5,4 @@ import java.util.*
 
 private val dtf =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS")
 
-actual fun currentTimeStr() = dtf.format(Date())
+public actual fun currentTimeStr(): String = dtf.format(Date())

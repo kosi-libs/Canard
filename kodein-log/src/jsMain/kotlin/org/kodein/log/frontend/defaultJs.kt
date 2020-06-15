@@ -2,4 +2,4 @@ package org.kodein.log.frontend
 
 import org.kodein.log.LogFrontend
 
-actual val defaultLogFrontend: LogFrontend get() = consoleFrontend
+public actual val defaultLogFrontend: LogFrontend get() = consoleFrontend

@@ -1,4 +1,4 @@
 package org.kodein.log
 
 
-expect fun currentTimeStr(): String
+public expect fun currentTimeStr(): String

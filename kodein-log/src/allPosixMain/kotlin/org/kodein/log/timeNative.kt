@@ -4,7 +4,7 @@ import kotlinx.cinterop.*
 import platform.posix.*
 
 @Suppress("EXPERIMENTAL_UNSIGNED_LITERALS")
-actual fun currentTimeStr(): String {
+public actual fun currentTimeStr(): String {
     memScoped {
         val ts = alloc<timespec>()
         clock_gettime(CLOCK_REALTIME, ts.ptr)

@@ -2,6 +2,6 @@ package org.kodein.log
 
 import kotlin.reflect.KClass
 
-actual val KClass<*>.platformName get() = simpleName ?: "?"
+public actual val KClass<*>.platformName: String get() = simpleName ?: "?"
 
-actual val KClass<*>.packageName: String get() = error("JS does not support package name reflection")
+public actual val KClass<*>.packageName: String get() = error("JS does not support package name reflection")

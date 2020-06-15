@@ -6,7 +6,7 @@ import org.kodein.log.Logger
 import org.kodein.log.darwin.ios_log
 import platform.darwin.*
 
-val iosFrontend: LogFrontend = { cls ->
+public val iosFrontend: LogFrontend = { cls ->
     val names = cls.qualifiedName?.split(".") ?: cls.simpleName?.let { listOf(it) } ?: listOf("")
     val log =
             if (names.size >= 2) os_log_create(names.subList(0, names.size - 1).joinToString("."), names.last())

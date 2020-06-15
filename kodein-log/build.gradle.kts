@@ -27,7 +27,7 @@ kodein {
             main { dependsOn(defaultNativeMain) }
         }
 
-        add(kodeinTargets.native.allApple) {
+        add(kodeinTargets.native.allDarwin) {
             mainCompilation.cinterops.create("ios_log")
         }
     }
