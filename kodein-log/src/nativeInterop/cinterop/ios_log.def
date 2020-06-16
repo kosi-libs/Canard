@@ -3,6 +3,15 @@ package = org.kodein.log.darwin
 
 #include <os/log.h>
 
-void ios_log(os_log_t log, os_log_type_t type, const char *msg) {
+#define DARWIN_LOG_TYPE_INFO OS_LOG_TYPE_INFO
+#define DARWIN_LOG_TYPE_DEBUG OS_LOG_TYPE_DEBUG
+#define DARWIN_LOG_TYPE_ERROR OS_LOG_TYPE_ERROR
+#define DARWIN_LOG_TYPE_FAULT OS_LOG_TYPE_FAULT
+
+os_log_t darwin_log_create(const char *subsystem, const char *category) {
+    return os_log_create(subsystem, category);
+}
+
+void darwin_log_with_type(os_log_t log, os_log_type_t type, const char *msg) {
     os_log_with_type(log, type, "%s", msg);
 }
