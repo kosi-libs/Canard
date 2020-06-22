@@ -25,6 +25,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Setup Android SDK dir
+        run: echo sdk.dir=$ANDROID_HOME > local.properties
       - name: Check
         run: ./gradlew hostOnlyTest
       - name: Publish
@@ -43,6 +45,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Setup Android SDK dir
+        run: echo sdk.dir=$ANDROID_HOME > local.properties
       - name: Check
         run: ./gradlew check --no-daemon
       - name: Publish
