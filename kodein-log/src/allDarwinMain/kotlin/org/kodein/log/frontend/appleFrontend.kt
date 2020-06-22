@@ -4,11 +4,8 @@ import org.kodein.log.LogFrontend
 import org.kodein.log.Logger
 import org.kodein.log.darwin.*
 
-public val iosFrontend: LogFrontend = { cls ->
-    val names = cls.qualifiedName?.split(".") ?: cls.simpleName?.let { listOf(it) } ?: listOf("")
-    val log =
-            if (names.size >= 2) darwin_log_create(names.subList(0, names.size - 1).joinToString("."), names.last())
-            else darwin_log_create(names.first(), "")
+public val iosFrontend: LogFrontend = { tag ->
+    val log = darwin_log_create(tag.pkg, tag.name)
 
     ({ e, m ->
         val type = when (e.level) {

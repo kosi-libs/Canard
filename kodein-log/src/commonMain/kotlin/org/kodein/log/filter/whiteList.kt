@@ -1,24 +1,27 @@
 package org.kodein.log.filter
 
 import org.kodein.log.LogFilter
-import org.kodein.log.packageName
+import org.kodein.log.Logger
+import org.kodein.log.platformPackageName
 import kotlin.reflect.KClass
 
 
 public sealed class Condition {
     internal abstract val display: Boolean
-    internal abstract fun verifies(cls: KClass<*>): Boolean
-    public data class IsClass(val cls: KClass<*>, override val display: Boolean) : Condition() {
-        override fun verifies(cls: KClass<*>) = cls == this.cls
+    internal abstract fun verifies(tag: Logger.Tag): Boolean
+
+    public data class IsTag(val tag: Logger.Tag, override val display: Boolean) : Condition() {
+        override fun verifies(tag: Logger.Tag) = tag == this.tag
     }
-    public data class IsPackage(val packageName: String, override val display: Boolean) : Condition() {
-        override fun verifies(cls: KClass<*>): Boolean = cls.packageName == this.packageName
+
+    public data class IsPkg(val pkg: String, override val display: Boolean) : Condition() {
+        override fun verifies(tag: Logger.Tag): Boolean = tag.pkg == this.pkg
     }
 }
 
-public fun conditionList(default: Boolean, list: Iterable<Condition>): LogFilter = filter@ { from, entry ->
+public fun conditionList(default: Boolean, list: Iterable<Condition>): LogFilter = filter@ { tag, entry ->
     list.forEach {
-        if (it.verifies(from)) {
+        if (it.verifies(tag)) {
             return@filter if (it.display) entry else null
         }
     }

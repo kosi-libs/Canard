@@ -3,29 +3,26 @@ package org.kodein.log.frontend
 import org.kodein.log.Logger
 import org.kodein.log.LogFrontend
 import org.kodein.log.currentTimeStr
-import org.kodein.log.platformName
 
 
-public val printFrontend: LogFrontend = { f ->
-    val platform = f.platformName
+public val printFrontend: LogFrontend = { tag ->
+    { entry, msg ->
+        val log: (String) -> Unit = if (entry.level == Logger.Level.ERROR) ({ println(it) }) else ({ errPrintln(it) })
 
-    { e, msg ->
-        val log: (String) -> Unit = if (e.level == Logger.Level.ERROR) ({ println(it) }) else ({ errPrintln(it) })
-
-        val prefix = " ".repeat(7 - e.level.name.length) + "${e.level.name}: ${currentTimeStr()} |"
+        val prefix = " ".repeat(7 - entry.level.name.length) + "${entry.level.name}: ${currentTimeStr()} |"
         val indent = " ".repeat(prefix.length)
         if (msg != null) {
             msg.lines().forEachIndexed { i, l ->
-                if (i == 0) log("$prefix $platform: $l")
+                if (i == 0) log("$prefix $tag: $l")
                 else log("$indent $l")
             }
         } else {
-            log("$prefix | $platform")
+            log("$prefix $tag")
         }
 
-        e.meta.forEach { log("$indent     ${it.key}: ${it.value}") }
+        entry.meta.forEach { log("$indent     ${it.key}: ${it.value}") }
 
-        e.ex?.logStackTrace("$indent   ", log)
+        entry.ex?.logStackTrace("$indent   ", log)
     }
 }
 

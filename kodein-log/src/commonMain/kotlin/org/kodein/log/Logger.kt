@@ -4,20 +4,26 @@ import org.kodein.log.frontend.defaultLogFrontend
 import kotlin.reflect.KClass
 
 
-public typealias LogFilter = (KClass<*>, Logger.Entry) -> Logger.Entry?
+public typealias LogFilter = (Logger.Tag, Logger.Entry) -> Logger.Entry?
 
-public typealias LogFrontend = (KClass<*>) -> (Logger.Entry, String?) -> Unit
+public typealias LogFrontend = (Logger.Tag) -> (Logger.Entry, String?) -> Unit
 
 private val defaultFrontEnds by lazy {
-    defaultLogFrontend(Logger::class)(Logger.Entry(Logger.Level.VERBOSE), "Using platform default log front end since no front end was defined")
+    defaultLogFrontend(Logger.Tag(Logger::class))(Logger.Entry(Logger.Level.VERBOSE), "Using platform default log front end since no front end was defined")
     listOf(defaultLogFrontend)
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public class Logger(@PublishedApi internal val from: KClass<*>, frontEnds: Collection<LogFrontend>, @PublishedApi internal val filters: Collection<LogFilter> = emptyList()) {
+public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<LogFrontend>, @PublishedApi internal val filters: Collection<LogFilter> = emptyList()) {
+
+    public data class Tag(val pkg: String, val name: String) {
+        public constructor(cls: KClass<*>) : this(cls.platformPackageName, cls.platformSimpleName)
+
+        override fun toString(): String = "$pkg.$name"
+    }
 
     @PublishedApi
-    internal val frontends = (if (frontEnds.isNotEmpty()) frontEnds else defaultFrontEnds) .map { it(from) }
+    internal val frontends = (if (frontEnds.isNotEmpty()) frontEnds else defaultFrontEnds) .map { it(tag) }
 
     public enum class Level { VERBOSE, INFO, WARNING, ERROR }
 
@@ -25,7 +31,7 @@ public class Logger(@PublishedApi internal val from: KClass<*>, frontEnds: Colle
 
     @PublishedApi
     internal fun createEntry(level: Level, error: Throwable? = null, meta: Map<String, Any>): Entry? =
-            filters.fold(Entry(level, error, meta)) { entry, filter -> filter(from, entry) ?: return null  }
+            filters.fold(Entry(level, error, meta)) { entry, filter -> filter(tag, entry) ?: return null  }
 
     public inline fun log(level: Level, error: Throwable? = null, meta: Map<String, Any> = emptyMap(), msgCreator: () -> String? = { null }) {
         val entry = createEntry(level, error, meta) ?: return
@@ -44,6 +50,6 @@ public class Logger(@PublishedApi internal val from: KClass<*>, frontEnds: Colle
     public inline fun error(ex: Throwable) { log(Level.ERROR, ex) }
 
     public companion object {
-        public inline fun <reified T: Any> from(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()): Logger = Logger(T::class, frontends, filters)
+        public inline fun <reified T: Any> from(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()): Logger = Logger(Logger.Tag(T::class), frontends, filters)
     }
 }

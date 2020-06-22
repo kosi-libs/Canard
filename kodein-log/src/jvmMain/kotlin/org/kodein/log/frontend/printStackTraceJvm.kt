@@ -1,6 +1,5 @@
 package org.kodein.log.frontend
 
-//internal actual fun Throwable.platformPrintStackTrace() = this.printStackTrace()
 
 internal actual fun errPrintln(msg: String) = System.err.println(msg)
 

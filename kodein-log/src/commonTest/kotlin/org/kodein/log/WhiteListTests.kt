@@ -1,19 +1,19 @@
 package org.kodein.log
 
-import org.kodein.log.filter.Condition.IsClass
+import org.kodein.log.Logger.Tag
+import org.kodein.log.filter.Condition.IsTag
 import org.kodein.log.filter.conditionList
-import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class WhiteListTests {
 
-    private class TestFrontend {
-        val entries: MutableList<Triple<KClass<*>, Logger.Entry, String?>> = ArrayList()
+    private class TestFrontendBuilder {
+        val entries: MutableList<Triple<Tag, Logger.Entry, String?>> = ArrayList()
 
-        operator fun unaryPlus(): LogFrontend = { f ->
-            { e, m ->
-                entries += Triple(f, e, m)
+        operator fun unaryPlus(): LogFrontend = { tag ->
+            { entry, message ->
+                entries += Triple(tag, entry, message)
             }
         }
 
@@ -21,28 +21,28 @@ class WhiteListTests {
 
     @Test
     fun test00_WhiteList() {
-        val r = TestFrontend()
-        val l = conditionList(false, listOf(
-                IsClass(this::class, true)
+        val builder = TestFrontendBuilder()
+        val conditions = conditionList(false, listOf(
+                IsTag(Tag(this::class), true)
         ))
-        val f = LoggerFactory(listOf(+r), listOf(l))
-        f.newLogger(this::class).info { "THIS" }
-        f.newLogger<String>().warning { "STRING" }
+        val factory = LoggerFactory(listOf(+builder), listOf(conditions))
+        factory.newLogger(this::class).info { "THIS" }
+        factory.newLogger<String>().warning { "STRING" }
 
-        assertEquals<List<Triple<KClass<*>, Logger.Entry, String?>>>(listOf(Triple(this::class, Logger.Entry(Logger.Level.INFO), "THIS")), r.entries)
+        assertEquals<List<Triple<Tag, Logger.Entry, String?>>>(listOf(Triple(Tag(this::class), Logger.Entry(Logger.Level.INFO), "THIS")), builder.entries)
     }
 
     @Test
     fun test01_BlackList() {
-        val r = TestFrontend()
-        val l = conditionList(true, listOf(
-                IsClass(this::class, false)
+        val builder = TestFrontendBuilder()
+        val conditions = conditionList(true, listOf(
+                IsTag(Tag(this::class), false)
         ))
-        val f = LoggerFactory(listOf(+r), listOf(l))
-        f.newLogger(this::class).info { "THIS" }
-        f.newLogger<String>().warning { "STRING" }
+        val factory = LoggerFactory(listOf(+builder), listOf(conditions))
+        factory.newLogger(this::class).info { "THIS" }
+        factory.newLogger<String>().warning { "STRING" }
 
-        assertEquals<List<Triple<KClass<*>, Logger.Entry, String?>>>(listOf(Triple(String::class, Logger.Entry(Logger.Level.WARNING), "STRING")), r.entries)
+        assertEquals<List<Triple<Tag, Logger.Entry, String?>>>(listOf(Triple(Tag(String::class), Logger.Entry(Logger.Level.WARNING), "STRING")), builder.entries)
     }
 
 }
