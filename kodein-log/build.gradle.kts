@@ -8,7 +8,7 @@ kodein {
             target.setCompileClasspath()
             main.dependencies {
                 implementation("org.slf4j:slf4j-api:1.7.30")
-                compileOnlyAndroidJar()
+                compileOnly(files("libs/android.jar"))
             }
         }
         add(kodeinTargets.js.js) {
