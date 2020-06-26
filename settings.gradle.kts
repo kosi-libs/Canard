@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         mavenLocal()
+        maven(url = "https://dl.bintray.com/kodein-framework/kodein-dev")
         maven(url = "https://dl.bintray.com/kodein-framework/Kodein-Internal-Gradle")
     }
     dependencies {
