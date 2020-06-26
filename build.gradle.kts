@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = "org.kodein.log"
-    version = "0.3.0-1.4-M2"
+    version = "0.3.0"
 }
 
 kodeinPublications {
