@@ -4,6 +4,11 @@ on:
   release:
     types: [published]
 
+env:
+  BINTRAY_USER: ${{ secrets.bintray_user }}
+  BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
+  BINTRAY_USER_ORG: ${{ secrets.bintray_user_org }}
+
 jobs:
 
   build-upload:
@@ -30,21 +35,16 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Setup gradle.properties
+        run: cp .github/conf/ci.gradle.properties gradle.properties
       - name: Check
         run: ./gradlew hostOnlyTest
         shell: bash
       - name: Upload
-        env:
-          BINTRAY_USER: ${{ secrets.bintray_user }}
-          BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
-          BINTRAY_USER_ORG: ${{ secrets.bintray_user_org }}
         run: ./gradlew hostOnlyPublish
         shell: bash
       - name: Discard
         if: ${{ failure() || cancelled() }}
-        env:
-          BINTRAY_USER: ${{ secrets.bintray_user }}
-          BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
         run: ./gradlew postBintrayDiscard
         shell: bash
 
@@ -70,26 +70,18 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Setup gradle.properties
+        run: cp .github/conf/ci.gradle.properties gradle.properties
       - name: Check
         run: ./gradlew check
         shell: bash
       - name: Upload
-        env:
-          BINTRAY_USER: ${{ secrets.bintray_user }}
-          BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
-          BINTRAY_USER_ORG: ${{ secrets.bintray_user_org }}
         run: ./gradlew publish
         shell: bash
       - name: Discard
         if: ${{ failure() || cancelled() }}
-        env:
-          BINTRAY_USER: ${{ secrets.bintray_user }}
-          BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
         run: ./gradlew postBintrayDiscard
         shell: bash
       - name: Publish
-        env:
-          BINTRAY_USER: ${{ secrets.bintray_user }}
-          BINTRAY_APIKEY: ${{ secrets.bintray_apikey }}
         run: ./gradlew postBintrayPublish
         shell: bash
