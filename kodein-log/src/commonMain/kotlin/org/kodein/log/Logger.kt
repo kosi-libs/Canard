@@ -25,7 +25,7 @@ public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<L
     @PublishedApi
     internal val frontends = (if (frontEnds.isNotEmpty()) frontEnds else defaultFrontEnds) .map { it(tag) }
 
-    public enum class Level { VERBOSE, INFO, WARNING, ERROR }
+    public enum class Level(public val severity: Int) { VERBOSE(0), INFO(1), WARNING(2), ERROR(3) }
 
     public data class Entry(val level: Level, val ex: Throwable? = null, val meta: Map<String, Any> = emptyMap())
 

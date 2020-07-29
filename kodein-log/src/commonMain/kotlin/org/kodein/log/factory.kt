@@ -16,6 +16,9 @@ public interface LoggerFactory {
             Logger(it, frontends, filters)
         }
 
+        public operator fun invoke(vararg frontends: LogFrontend, filters: Collection<LogFilter> = emptyList()): LoggerFactory =
+                invoke(frontends.toList(), filters)
+
         public val default: LoggerFactory = LoggerFactory { Logger(it, listOf(defaultLogFrontend)) }
     }
 }
