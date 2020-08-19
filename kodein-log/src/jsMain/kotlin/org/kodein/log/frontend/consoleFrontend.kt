@@ -2,10 +2,11 @@ package org.kodein.log.frontend
 
 import org.kodein.log.Logger
 import org.kodein.log.LogFrontend
+import org.kodein.log.LogReceiver
 
 
-public val consoleFrontend: LogFrontend = { tag ->
-    { entry, msg ->
+public val consoleFrontend: LogFrontend = LogFrontend { tag ->
+    LogReceiver { entry, msg ->
         val logMsg =
                 if (entry.meta.isEmpty()) msg
                 else buildString {

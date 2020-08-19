@@ -2,6 +2,7 @@ package org.kodein.log
 
 import kotlin.js.Date
 
+@Suppress("LocalVariableName")
 public actual fun currentTimeStr(): String = Date(Date.now()).let {
     val Y = it.getFullYear().toString()
     val M = it.getMonth().inc().toString().padStart(2, '0')

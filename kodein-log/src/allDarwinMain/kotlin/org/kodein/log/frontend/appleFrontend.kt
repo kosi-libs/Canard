@@ -1,13 +1,14 @@
 package org.kodein.log.frontend
 
 import org.kodein.log.LogFrontend
+import org.kodein.log.LogReceiver
 import org.kodein.log.Logger
 import org.kodein.log.darwin.*
 
-public val iosFrontend: LogFrontend = { tag ->
+public val iosFrontend: LogFrontend = LogFrontend { tag ->
     val log = darwin_log_create(tag.pkg, tag.name)
 
-    ({ e, m ->
+    LogReceiver { e, m ->
         val type = when (e.level) {
             Logger.Level.VERBOSE -> DARWIN_LOG_TYPE_DEBUG
             Logger.Level.INFO -> DARWIN_LOG_TYPE_INFO
@@ -16,5 +17,5 @@ public val iosFrontend: LogFrontend = { tag ->
         }
 
         darwin_log_with_type(log, type, m)
-    })
+    }
 }

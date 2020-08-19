@@ -4,14 +4,10 @@ import org.kodein.log.frontend.defaultLogFrontend
 import kotlin.reflect.KClass
 
 
-public interface LoggerFactory {
+public fun interface LoggerFactory {
     public fun newLogger(tag: Logger.Tag): Logger
 
     public companion object {
-        public operator fun invoke(factory: (Logger.Tag) -> Logger): LoggerFactory = object : LoggerFactory {
-            override fun newLogger(tag: Logger.Tag) = factory(tag)
-        }
-
         public operator fun invoke(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()): LoggerFactory = LoggerFactory {
             Logger(it, frontends, filters)
         }

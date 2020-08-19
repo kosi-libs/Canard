@@ -2,11 +2,12 @@ package org.kodein.log.frontend
 
 import org.kodein.log.Logger
 import org.kodein.log.LogFrontend
+import org.kodein.log.LogReceiver
 import org.kodein.log.currentTimeStr
 
 
-public fun stringFrontend(getPrinter: (Logger.Entry) -> (String) -> Unit): LogFrontend = { tag ->
-    { entry, msg ->
+public fun stringFrontend(getPrinter: (Logger.Entry) -> (String) -> Unit): LogFrontend = LogFrontend { tag ->
+    LogReceiver { entry, msg ->
         val printer = getPrinter(entry)
 
         val prefix = " ".repeat(7 - entry.level.name.length) + "${entry.level.name}: ${currentTimeStr()} |"

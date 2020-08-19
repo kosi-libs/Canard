@@ -19,7 +19,7 @@ public sealed class Condition {
     }
 }
 
-public fun conditionList(default: Boolean, list: Iterable<Condition>): LogFilter = filter@ { tag, entry ->
+public fun conditionList(default: Boolean, list: Iterable<Condition>): LogFilter = LogFilter filter@ { tag, entry ->
     list.forEach {
         if (it.verifies(tag)) {
             return@filter if (it.display) entry else null
