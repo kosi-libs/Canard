@@ -11,8 +11,8 @@ class WhiteListTests {
     private class TestFrontendBuilder {
         val entries: MutableList<Triple<Tag, Logger.Entry, String?>> = ArrayList()
 
-        operator fun unaryPlus(): LogFrontend = { tag ->
-            { entry, message ->
+        operator fun unaryPlus(): LogFrontend = LogFrontend { tag ->
+            LogReceiver { entry, message ->
                 entries += Triple(tag, entry, message)
             }
         }
