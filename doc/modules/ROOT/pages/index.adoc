@@ -1,0 +1,4 @@
+= Kodein-Log Documentation
+image::kodein-log-logo.svg[KODEIN-LOG, 700]
+
+IMPORTANT: TBD

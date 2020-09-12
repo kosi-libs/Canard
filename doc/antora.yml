@@ -1,0 +1,6 @@
+name: kodein-log
+title: Kodein-Log
+version: 0.5.0
+nav:
+  - modules/ROOT/nav.adoc
+  - modules/core/nav.adoc
