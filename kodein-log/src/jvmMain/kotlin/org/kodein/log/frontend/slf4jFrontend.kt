@@ -16,7 +16,7 @@ public val slf4jFrontend: LogFrontend = LogFrontend { tag ->
                 }
 
         when (entry.level) {
-            Logger.Level.VERBOSE -> logger.debug(logMsg, entry.ex)
+            Logger.Level.DEBUG -> logger.debug(logMsg, entry.ex)
             Logger.Level.INFO -> logger.info(logMsg, entry.ex)
             Logger.Level.WARNING -> logger.warn(logMsg, entry.ex)
             Logger.Level.ERROR -> logger.error(logMsg, entry.ex)

@@ -10,7 +10,7 @@ public val iosFrontend: LogFrontend = LogFrontend { tag ->
 
     LogReceiver { e, m ->
         val type = when (e.level) {
-            Logger.Level.VERBOSE -> DARWIN_LOG_TYPE_DEBUG
+            Logger.Level.DEBUG -> DARWIN_LOG_TYPE_DEBUG
             Logger.Level.INFO -> DARWIN_LOG_TYPE_INFO
             Logger.Level.WARNING -> DARWIN_LOG_TYPE_ERROR
             Logger.Level.ERROR -> DARWIN_LOG_TYPE_FAULT

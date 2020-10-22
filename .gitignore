@@ -12,10 +12,8 @@
 build/
 out/
 !dokka/out/
-gradle.properties
-gradle.props
-local.properties
 .gradletasknamecache
+*local.properties
 
 # JS
 node_modules/

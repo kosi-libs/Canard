@@ -17,7 +17,7 @@ public val androidFrontend: LogFrontend = LogFrontend { tag ->
             Logger.Level.INFO -> {
                 Log.i(tag.toString(), message, entry.ex)
             }
-            Logger.Level.VERBOSE -> {
+            Logger.Level.DEBUG -> {
                 Log.v(tag.toString(), message, entry.ex)
             }
         }

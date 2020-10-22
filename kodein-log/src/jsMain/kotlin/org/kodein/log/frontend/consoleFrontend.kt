@@ -15,7 +15,7 @@ public val consoleFrontend: LogFrontend = LogFrontend { tag ->
                 }
 
         val log = when (entry.level) {
-            Logger.Level.VERBOSE -> console::log
+            Logger.Level.DEBUG -> console::log
             Logger.Level.INFO -> console::info
             Logger.Level.WARNING -> console::warn
             Logger.Level.ERROR -> console::error

@@ -20,7 +20,7 @@ public fun interface LogFrontend {
 private val defaultFrontEnds by lazy {
     defaultLogFrontend
             .getReceiverFor(Logger.Tag(Logger::class))
-            .receive(Logger.Entry(VERBOSE), "Using platform default log front end since no front end was defined")
+            .receive(Logger.Entry(DEBUG), "Using platform default log front end since no front end was defined")
     listOf(defaultLogFrontend)
 }
 
@@ -29,14 +29,13 @@ public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<L
 
     public data class Tag(val pkg: String, val name: String) {
         public constructor(cls: KClass<*>) : this(cls.platformPackageName, cls.platformSimpleName)
-
         override fun toString(): String = "$pkg.$name"
     }
 
     @PublishedApi
     internal val frontends = (if (frontEnds.isNotEmpty()) frontEnds else defaultFrontEnds) .map { it.getReceiverFor(tag) }
 
-    public enum class Level(public val severity: Int) { VERBOSE(0), INFO(1), WARNING(2), ERROR(3) }
+    public enum class Level(public val severity: Int) { DEBUG(0), INFO(1), WARNING(2), ERROR(3) }
 
     public data class Entry(val level: Level, val ex: Throwable? = null, val meta: Map<String, Any> = emptyMap())
 
@@ -50,7 +49,7 @@ public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<L
         frontends.forEach { it.receive(entry, msg) }
     }
 
-    public inline fun verbose(msgCreator: () -> String) { log(level = VERBOSE, msgCreator = msgCreator) }
+    public inline fun debug(msgCreator: () -> String) { log(level = DEBUG, msgCreator = msgCreator) }
 
     public inline fun info(msgCreator: () -> String) { log(level = INFO, msgCreator = msgCreator) }
 
