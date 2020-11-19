@@ -1,5 +1,7 @@
 package org.kodein.log
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import org.kodein.log.Logger.Level.*
 import org.kodein.log.frontend.defaultLogFrontend
 import kotlin.reflect.KClass
@@ -37,7 +39,7 @@ public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<L
 
     public enum class Level(public val severity: Int) { DEBUG(0), INFO(1), WARNING(2), ERROR(3) }
 
-    public data class Entry(val level: Level, val ex: Throwable? = null, val meta: Map<String, Any> = emptyMap())
+    public data class Entry(val level: Level, val ex: Throwable? = null, val meta: Map<String, Any> = emptyMap(), val instant: Instant = Clock.System.now())
 
     @PublishedApi
     internal fun createEntry(level: Level, error: Throwable? = null, meta: Map<String, Any>): Entry? =

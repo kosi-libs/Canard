@@ -13,7 +13,7 @@ class ShortPackagesTests {
 
         assertEquals(
             listOf<Triple<Logger.Tag, Logger.Entry, String?>>(
-                Triple(Logger.Tag("o.k.t.log.shortener", "Tests"), Logger.Entry(Logger.Level.INFO), "Hey!"),
+                Triple(Logger.Tag("o.k.t.log.shortener", "Tests"), testEntry(Logger.Level.INFO), "Hey!"),
             ),
             frontend.entries
         )
@@ -27,7 +27,7 @@ class ShortPackagesTests {
 
         assertEquals(
             listOf<Triple<Logger.Tag, Logger.Entry, String?>>(
-                Triple(Logger.Tag("o.k.tests.log.shortener", "Tests"), Logger.Entry(Logger.Level.INFO), "Hey!"),
+                Triple(Logger.Tag("o.k.tests.log.shortener", "Tests"), testEntry(Logger.Level.INFO), "Hey!"),
             ),
             frontend.entries
         )

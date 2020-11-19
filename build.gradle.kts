@@ -4,7 +4,11 @@ plugins {
 
 allprojects {
     group = "org.kodein.log"
-    version = "0.6.0"
+    version = "0.7.0"
+
+    repositories {
+        maven(url = "https://kotlin.bintray.com/kotlinx")
+    }
 }
 
 kodeinPublications {

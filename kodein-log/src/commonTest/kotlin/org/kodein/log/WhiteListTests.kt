@@ -20,7 +20,7 @@ class WhiteListTests {
 
         assertEquals(
             listOf<Triple<Tag, Logger.Entry, String?>>(
-                Triple(Tag(this::class), Logger.Entry(Logger.Level.INFO), "THIS")
+                Triple(Tag(this::class), testEntry(Logger.Level.INFO), "THIS")
             ),
             frontend.entries
         )
@@ -38,7 +38,7 @@ class WhiteListTests {
 
         assertEquals(
             listOf<Triple<Tag, Logger.Entry, String?>>(
-                Triple(Tag(String::class), Logger.Entry(Logger.Level.WARNING), "STRING")
+                Triple(Tag(String::class), testEntry(Logger.Level.WARNING), "STRING")
             ),
             frontend.entries
         )

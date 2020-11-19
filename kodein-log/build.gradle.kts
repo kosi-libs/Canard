@@ -4,6 +4,10 @@ plugins {
 
 kodein {
     kotlin {
+        common.main.dependencies {
+            api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
+        }
+
         add(kodeinTargets.jvm.jvm) {
             target.setCompileClasspath()
             main.dependencies {

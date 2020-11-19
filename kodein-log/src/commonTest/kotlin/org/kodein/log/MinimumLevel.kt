@@ -21,8 +21,8 @@ class MinimumLevel {
 
         assertEquals(
             listOf<Triple<Tag, Logger.Entry, String?>>(
-                Triple(Tag(this::class), Logger.Entry(Logger.Level.WARNING), "warning"),
-                Triple(Tag(this::class), Logger.Entry(Logger.Level.ERROR), "error")
+                Triple(Tag(this::class), testEntry(Logger.Level.WARNING), "warning"),
+                Triple(Tag(this::class), testEntry(Logger.Level.ERROR), "error")
             ),
             frontend.entries
         )
