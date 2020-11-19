@@ -4,18 +4,24 @@ plugins {
 
 kodein {
     kotlin {
-        common.main.dependencies {
-            api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
+        val datetimeMain by sourceSets.creating {
+            dependsOn(common.main)
+            dependencies {
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
+            }
         }
 
         add(kodeinTargets.jvm.jvm) {
+            main.dependsOn(datetimeMain)
             target.setCompileClasspath()
             main.dependencies {
                 implementation("org.slf4j:slf4j-api:1.7.30")
                 compileOnly(rootProject.files("libs/android-log.jar"))
             }
         }
+
         add(kodeinTargets.js.js) {
+            main.dependsOn(datetimeMain)
             configure(listOf(mainCompilation, testCompilation)) {
                 kotlinOptions {
                     sourceMap = true
@@ -25,14 +31,29 @@ kodein {
         }
 
         val defaultNativeMain by sourceSets.creating {
-            dependsOn(sourceSets["commonMain"])
+            dependsOn(common.main)
         }
 
-        add(kodeinTargets.native.allDesktop + kodeinTargets.native.allEmbeddedLinux) {
-            main { dependsOn(defaultNativeMain) }
+        add(kodeinTargets.native.allDesktop) {
+            main {
+                dependsOn(defaultNativeMain)
+                dependsOn(datetimeMain)
+            }
+        }
+
+        val embeddedNativeMain by sourceSets.creating {
+            dependsOn(common.main)
+        }
+
+        add(kodeinTargets.native.allEmbeddedLinux) {
+            main {
+                dependsOn(defaultNativeMain)
+                dependsOn(embeddedNativeMain)
+            }
         }
 
         add(kodeinTargets.native.allDarwin) {
+            main.dependsOn(datetimeMain)
             mainCompilation.cinterops.create("ios_log")
         }
     }
