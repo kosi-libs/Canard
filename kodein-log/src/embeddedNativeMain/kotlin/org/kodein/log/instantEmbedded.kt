@@ -10,7 +10,7 @@ public actual fun now(): Instant {
     memScoped {
         val spec = alloc<timespec>()
         clock_gettime(CLOCK_REALTIME, spec.ptr)
-        return Instant(spec.tv_sec, spec.tv_nsec)
+        return Instant(spec.tv_sec, spec.tv_nsec.convert())
     }
 }
 
