@@ -43,9 +43,12 @@ public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<L
     internal fun createEntry(level: Level, error: Throwable? = null, meta: Map<String, Any>): Entry? =
             filters.fold(Entry(level, error, meta)) { entry, filter -> filter.filter(tag, entry) ?: return null  }
 
+    @PublishedApi
+    internal var msgPrefix: String? = null
+
     public inline fun log(level: Level, error: Throwable? = null, meta: Map<String, Any> = emptyMap(), msgCreator: () -> String? = { null }) {
         val entry = createEntry(level, error, meta) ?: return
-        val msg = msgCreator()
+        val msg = msgPrefix?.let { "$it - " + msgCreator() } ?: msgCreator()
         frontends.forEach { it.receive(entry, msg) }
     }
 
@@ -60,6 +63,9 @@ public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<L
     public inline fun error(ex: Throwable) { log(level = ERROR, error = ex) }
 
     public companion object {
-        public inline fun <reified T: Any> from(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()): Logger = Logger(Tag(T::class), frontends, filters)
+        public inline fun <reified T: Any> from(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()): Logger = Logger(
+            Logger.Tag(T::class), frontends, filters)
     }
 }
+
+public fun Logger.prefixed(prefix: String): Logger = this.apply { msgPrefix = prefix }
