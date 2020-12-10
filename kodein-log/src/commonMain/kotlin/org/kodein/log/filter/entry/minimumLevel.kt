@@ -1,4 +1,4 @@
-package org.kodein.log.filter
+package org.kodein.log.filter.entry
 
 import org.kodein.log.LogFilter
 import org.kodein.log.Logger

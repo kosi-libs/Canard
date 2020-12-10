@@ -9,6 +9,10 @@ public fun interface LogFilter {
     public fun filter(tag: Logger.Tag, entry: Logger.Entry): Logger.Entry?
 }
 
+public fun interface LogMapper {
+    public fun filter(tag: Logger.Tag, entry: Logger.Entry, message: String): String
+}
+
 public fun interface LogReceiver {
     public fun receive(entry: Logger.Entry, message: String?)
 }
@@ -25,7 +29,11 @@ private val defaultFrontEnds by lazy {
 }
 
 @Suppress("NOTHING_TO_INLINE")
-public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<LogFrontend>, @PublishedApi internal val filters: Collection<LogFilter> = emptyList()) {
+public class Logger(
+    private val tag: Tag, frontEnds: Collection<LogFrontend>,
+    private val filters: List<LogFilter> = emptyList(),
+    private val mappers: List<LogMapper> = emptyList()
+) {
 
     public data class Tag(val pkg: String, val name: String) {
         public constructor(cls: KClass<*>) : this(cls.platformPackageName, cls.platformSimpleName)
@@ -43,9 +51,13 @@ public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<L
     internal fun createEntry(level: Level, error: Throwable? = null, meta: Map<String, Any>): Entry? =
             filters.fold(Entry(level, error, meta)) { entry, filter -> filter.filter(tag, entry) ?: return null  }
 
+    @PublishedApi
+    internal fun String.filterMessage(entry: Entry): String =
+        mappers.fold(this) { message, filter -> filter.filter(tag, entry, message) }
+
     public inline fun log(level: Level, error: Throwable? = null, meta: Map<String, Any> = emptyMap(), msgCreator: () -> String? = { null }) {
         val entry = createEntry(level, error, meta) ?: return
-        val msg = msgCreator()
+        val msg = msgCreator()?.filterMessage(entry)
         frontends.forEach { it.receive(entry, msg) }
     }
 
@@ -60,6 +72,6 @@ public class Logger(@PublishedApi internal val tag: Tag, frontEnds: Collection<L
     public inline fun error(ex: Throwable) { log(level = ERROR, error = ex) }
 
     public companion object {
-        public inline fun <reified T: Any> from(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()): Logger = Logger(Tag(T::class), frontends, filters)
+        public inline fun <reified T: Any> from(frontends: Collection<LogFrontend>, filters: List<LogFilter> = emptyList()): Logger = Logger(Tag(T::class), frontends, filters)
     }
 }

@@ -1,16 +1,14 @@
 package org.kodein.log
 
 import org.kodein.log.Logger.Tag
-import org.kodein.log.filter.Condition.IsTag
-import org.kodein.log.filter.conditionList
-import org.kodein.log.filter.minimumLevel
+import org.kodein.log.filter.entry.minimumLevel
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class MinimumLevel {
 
     @Test
-    fun test00_MinimumLevel() {
+    fun test_00_MinimumLevel() {
         val frontend = TestFrontend()
         val filter = minimumLevel(Logger.Level.WARNING)
         val factory = LoggerFactory(listOf(frontend), listOf(filter))
@@ -21,8 +19,8 @@ class MinimumLevel {
 
         assertEquals(
             listOf<Triple<Tag, Logger.Entry, String?>>(
-                Triple(Tag(this::class), testEntry(Logger.Level.WARNING), "warning"),
-                Triple(Tag(this::class), testEntry(Logger.Level.ERROR), "error")
+                Triple(Tag(this::class), frontend.testEntry(Logger.Level.WARNING), "warning"),
+                Triple(Tag(this::class), frontend.testEntry(Logger.Level.ERROR), "error")
             ),
             frontend.entries
         )

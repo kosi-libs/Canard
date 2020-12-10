@@ -4,18 +4,21 @@ import org.kodein.log.frontend.defaultLogFrontend
 import kotlin.reflect.KClass
 
 
-public fun interface LoggerFactory {
-    public fun newLogger(tag: Logger.Tag): Logger
+public class LoggerFactory(private val frontends: Collection<LogFrontend>, private val filters: List<LogFilter> = emptyList(), private val mappers: List<LogMapper> = emptyList()) {
+    public constructor(vararg frontends: LogFrontend, filters: List<LogFilter> = emptyList(), mappers: List<LogMapper> = emptyList()): this(frontends.toList(), filters, mappers)
+
+    public fun newLogger(tag: Logger.Tag): Logger = Logger(tag, frontends, filters, mappers)
+
+    public fun add(vararg frontends: LogFrontend): LoggerFactory = LoggerFactory(this.frontends + frontends, filters)
+
+    public fun append(vararg filters: LogFilter): LoggerFactory = LoggerFactory(frontends, this.filters + filters)
+    public fun prepend(vararg filters: LogFilter): LoggerFactory = LoggerFactory(frontends, filters.toList() + this.filters)
+
+    public fun append(vararg mappers: LogMapper): LoggerFactory = LoggerFactory(frontends, filters, this.mappers + mappers)
+    public fun prepend(vararg mappers: LogMapper): LoggerFactory = LoggerFactory(frontends, filters, mappers.toList() + this.mappers)
 
     public companion object {
-        public operator fun invoke(frontends: Collection<LogFrontend>, filters: Collection<LogFilter> = emptyList()): LoggerFactory = LoggerFactory {
-            Logger(it, frontends, filters)
-        }
-
-        public operator fun invoke(vararg frontends: LogFrontend, filters: Collection<LogFilter> = emptyList()): LoggerFactory =
-                invoke(frontends.toList(), filters)
-
-        public val default: LoggerFactory = LoggerFactory { Logger(it, listOf(defaultLogFrontend)) }
+        public val default: LoggerFactory = LoggerFactory(listOf(defaultLogFrontend))
     }
 }
 

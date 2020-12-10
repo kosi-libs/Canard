@@ -1,9 +1,7 @@
-package org.kodein.log.filter
+package org.kodein.log.filter.entry
 
 import org.kodein.log.LogFilter
 import org.kodein.log.Logger
-import org.kodein.log.platformPackageName
-import kotlin.reflect.KClass
 
 
 public sealed class Condition {
