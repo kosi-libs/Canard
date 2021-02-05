@@ -41,7 +41,7 @@ public class Logger(
     }
 
     @PublishedApi
-    internal val frontends = (if (frontEnds.isNotEmpty()) frontEnds else defaultFrontEnds) .map { it.getReceiverFor(tag) }
+    internal val frontends: List<LogReceiver> = (frontEnds.ifEmpty { defaultFrontEnds }) .map { it.getReceiverFor(tag) }
 
     public enum class Level(public val severity: Int) { DEBUG(0), INFO(1), WARNING(2), ERROR(3) }
 
