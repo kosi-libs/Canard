@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = "org.kodein.log"
-    version = "0.9.0"
+    version = "0.10.0"
 
     repositories {
         maven(url = "https://kotlin.bintray.com/kotlinx")
