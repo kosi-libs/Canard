@@ -10,7 +10,3 @@ allprojects {
         maven(url = "https://kotlin.bintray.com/kotlinx")
     }
 }
-
-kodeinPublications {
-    repo = "Kodein-Log"
-}
