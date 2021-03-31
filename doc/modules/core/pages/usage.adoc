@@ -1,0 +1,41 @@
+= Kodein-Log usage
+
+[[logger]]
+== `Logger`
+
+[[tags]]
+=== Tags
+
+[[default-frontends]]
+=== Default frontends
+
+[[levels]]
+=== Logging levels
+
+[[logger-factory]]
+== `LoggerFactory`
+
+[[logmapper]]
+== Transform the outputs (`LogMapper`)
+
+[[logfilter]]
+== Filter the outputs  (`LogFilter`)
+
+
+//
+//== Create a logger
+//
+//=== Minimal configuration
+// tag and frontends
+//
+//=== Using filters
+//
+//filters
+//
+//=== Using mappers
+//
+//
+//== Using a `LoggerFactory`
+
+
+// TODO

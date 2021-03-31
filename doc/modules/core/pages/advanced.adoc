@@ -1,0 +1,15 @@
+= Advanced
+
+[[custom-frontends]]
+== Working with custom frontends
+// TODO
+
+//Depending on the platform, the `defaultLogFrontend` will send the logs to the appropriate frontend
+//
+//- *_JVM_* targets, by priority order:
+//* *SLF4J*
+//* *Android log*
+//* Good old *println*
+//- *_Apple_* targets: link:https://developer.apple.com/documentation/os/oslog[OSLog]
+//- All the *_others Native_* targets goes to *println*
+//- *JS* logs on the standard console
