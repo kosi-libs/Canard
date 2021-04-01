@@ -1,22 +1,155 @@
 = Kodein-Log usage
 
+*_Kodein-Log_* allows to easily log any message, with a simple API.
+This guide is meant to walk you through all you need to know and use *_Kodein-Log_*.
+
+NOTE: *_Kodein-Log_* API is the same for all the Kotlin/Multiplatform targets.
+      However, under the hood each platform uses its own implementation (see xref:default-frontends[default frontends]).
+
 [[logger]]
 == `Logger`
+
+Creating a logger is really simple. Before logging a message you need to express some parameters to help the logger to:
+
+- identify the logged entry, with a xref:tags[`Tag`], like `org.kodein.documentation.MyController`
+- send the logged entry to the right output: console / file / platform specific logging system
+
+[source,kotlin]
+.create a simple Logger
+----
+Logger(
+    tag = Logger.Tag("org.kodein.log.documentation", "MyController"), // <1>
+    frontEnds = listOf(defaultLogFrontend) // <2>
+). info { "Hey!" } // <3>
+----
+<1> will identify any message logged with this `Logger` by prefixing them with this tag
+<2> defines on which outputs the logged messages should be sent.
+<3> log the following line: `INFO: 2021-04-01T12:20:37.648603 | org.kodein.log.documentation.MyController: Hey!`
+
+[TIP]
+====
+You can also use the companion function `Logger.from<T>` to create a logger.
+[source,kotlin]
+----
+Logger.from(defaultLogFrontend) // <1>
+----
+<1> Type receiver is inferred at compile time and automatically passed as `tag` argument to a new `Logger` instance.
+====
+
+NOTE: You can share the configuration of your application's loggers by using a xref:logger-factory[factory].
 
 [[tags]]
 === Tags
 
+We just saw that a `Tag` help us identify our logged message.
+A `Tag` is always shaped in two parts, a _package_ and a _class name_.
+
+There are two ways of creating a `Tag`, you can either create it manually using String arguments, or a given `KClass`.
+
+[source,kotlin]
+.Create a `Tag` manually
+----
+Tag(pckg = "org.kodein.log.documentation", name = "MyController")
+----
+
+[source,kotlin]
+.Create a `Tag` from a class
+----
+Tag(MyController::class)
+----
+
+[TIP]
+====
+The `Tag` can be inferred by Kotlin type system when using one of the extension functions:
+
+- `Logger.from(vararg frontends: LogFrontend)`
+- `LoggerFactory.newLogger()`
+- `T.newLogger(factory: LoggerFactory)`
+
+More details in xref:logger-factory[factory] section.
+====
+
 [[default-frontends]]
 === Default frontends
 
-[[levels]]
-=== Logging levels
+*_Kodein-Log_* is lightweight because it is just a facade that we plug on top of logging systems.
+_Frontends_ represent the implementations of the logging systems that *_Kodein-Log_* relies on to output your logs, depending on the platform your application is running on.
 
-[[logger-factory]]
-== `LoggerFactory`
+The main reason behind *_Kodein-Log_* existence is that we want to provide an easy way of logging for Kotlin/Multiplatform developers, without worrying about the platform specifics. Therefore, *_Kodein-Log_* has the notion of default frontends, that hide behind the _expect/actual_ mechanism, sending the logs to the right output, depending on the actual platform. Those implementations are accessible with the property `defaultLogFrontend`.
+
+[source,kotlin]
+.use default log frontend
+----
+Logger.from(defaultLogFrontend) // <1>
+----
+<1> Use the specific frontend defined by *_Kodein-Log_*
+
+Here is a table that expose which implementation are used, by
+targeted platform.
+
+[cols="1*,1*^.^"]
+|===
+|Targeted platform ^.^|Frontend implementation
+
+|JVM
+|http://www.slf4j.org[SLF4J]
+
+|Android
+^.^|https://developer.android.com/reference/android/util/Log[Android Log]
+
+a|Apple
+
+- iOS
+- macOS
+- watchOS
+- tvOS
+
+^.^|https://developer.apple.com/documentation/oslog[Apple OSLog]
+
+a|Other Kotlin/Native targets
+
+- Linux
+- Windows
+
+^.^|System standard output
+
+|Kotlin/JS
+^.^|https://developer.mozilla.org/en-US/docs/Web/API/Console/log[JavaScript console log]
+|===
+
+TIP: Remember that you can define your own xref:advanced.adoc#custom-frontends[frontends].
+
+[[severity]]
+=== Severity
+
+As for any logging library *_Kodein-Log_* provide different severities to log messages:
+
+- `logger.debug("Hey!")` -> `DEBUG: <TIME> | <TAG>: Hey!`
+- `logger.info("Hey!")` -> `INFO: <TIME> | <TAG>: Hey!`
+- `logger.warning("Hey!")` -> `WARNING: <TIME> | <TAG>: Hey!`
+- `logger.error("Hey!")` -> `ERROR: <TIME> | <TAG>: Hey!`
+
+You can filter the level of log output by using a `LogFilter`:
+
+[source,kotlin]
+----
+val logger = Logger.from(
+    frontends = listOf(defaultLogFrontend),
+    filters = listOf(minimumLevel(Logger.Level.WARNING)), // <1>
+)
+logger.info { "Hey!" } // <2>
+logger.warning { "Its me." } // <3>
+
+----
+<1> define the minimum severity to `WARNING`
+<2> WON'T be logged
+<3> WILL be logged
+
+[[logfilter]]
+== Filter the outputs  (`LogFilter`)
 
 [[logmapper]]
 == Transform the outputs (`LogMapper`)
 
-[[logfilter]]
-== Filter the outputs  (`LogFilter`)
+[[logger-factory]]
+== `LoggerFactory`
