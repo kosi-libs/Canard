@@ -54,7 +54,7 @@ kodein {
 
         add(kodeinTargets.native.allDarwin) {
             main.dependsOn(datetimeMain)
-            mainCompilation.cinterops.create("ios_log")
+            mainCompilation.cinterops.create("darwin_log")
         }
     }
 }

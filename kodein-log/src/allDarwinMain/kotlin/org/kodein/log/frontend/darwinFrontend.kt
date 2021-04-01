@@ -5,7 +5,7 @@ import org.kodein.log.LogReceiver
 import org.kodein.log.Logger
 import org.kodein.log.darwin.*
 
-public val iosFrontend: LogFrontend = LogFrontend { tag ->
+public val darwinFrontend: LogFrontend = LogFrontend { tag ->
     val log = darwin_log_create(tag.pkg, tag.name)
 
     LogReceiver { e, m ->
