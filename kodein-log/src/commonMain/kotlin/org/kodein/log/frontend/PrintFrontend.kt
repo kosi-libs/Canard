@@ -18,9 +18,9 @@ public fun printLogIn(tag: Logger.Tag, entry: Logger.Entry, msg: String?, printe
         printer("$prefix $tag")
     }
 
-    entry.meta.forEach { printer("$indent     ${it.key}: ${it.value}") }
+    entry.meta.forEach { printer("$indent ${it.key}: ${it.value}") }
 
-    entry.ex?.logStackTrace("$indent   ", printer)
+    entry.ex?.logStackTrace("$indent ", printer)
 }
 
 public fun printerFrontend(getPrinter: (Logger.Entry) -> (String) -> Unit): LogFrontend = LogFrontend { tag ->

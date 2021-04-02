@@ -72,6 +72,21 @@ public class Logger(
     public inline fun error(ex: Throwable) { log(level = ERROR, error = ex) }
 
     public companion object {
-        public inline fun <reified T: Any> from(frontends: Collection<LogFrontend>, filters: List<LogFilter> = emptyList()): Logger = Logger(Tag(T::class), frontends, filters)
+        public inline fun <reified T: Any> from(
+            frontends: Collection<LogFrontend>,
+            filters: List<LogFilter> = emptyList(),
+            mappers: List<LogMapper> = emptyList(),
+        ): Logger = Logger(
+            tag = Tag(T::class),
+            frontEnds = frontends,
+            filters = filters,
+            mappers = mappers
+        )
+
+        public inline fun <reified T: Any> from(
+            vararg frontends: LogFrontend,
+            filters: List<LogFilter> = emptyList(),
+            mappers: List<LogMapper> = emptyList(),
+        ): Logger = from<T>(frontends.toList(), filters, mappers)
     }
 }

@@ -1,19 +1,17 @@
 package org.kodein.log
 
 import org.kodein.log.Logger.Tag
-import org.kodein.log.filter.entry.Condition.IsTag
-import org.kodein.log.filter.entry.conditionList
+import org.kodein.log.filter.entry.blockList
+import org.kodein.log.filter.entry.allowList
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class WhiteListTests {
+class AllowListTests {
 
     @Test
-    fun test_00_WhiteList() {
+    fun test_00_AllowList() {
         val frontend = TestFrontend()
-        val conditions = conditionList(false, listOf(
-                IsTag(Tag(this::class), true)
-        ))
+        val conditions = allowList(listOf(Tag(this::class)))
         val factory = LoggerFactory(listOf(frontend), listOf(conditions))
         newLogger(factory).info { "THIS" }
         factory.newLogger<String>().warning { "STRING" }
@@ -27,11 +25,9 @@ class WhiteListTests {
     }
 
     @Test
-    fun test_01_BlackList() {
+    fun test_01_BlockList() {
         val frontend = TestFrontend()
-        val conditions = conditionList(true, listOf(
-                IsTag(Tag(this::class), false)
-        ))
+        val conditions = blockList(packages = listOf("org.kodein.log"))
         val factory = LoggerFactory(listOf(frontend), listOf(conditions))
         newLogger(factory).info { "THIS" }
         factory.newLogger<String>().warning { "STRING" }

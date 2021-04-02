@@ -1,5 +1,6 @@
 package org.kodein.log
 
+public fun LogFrontend.withShortPackages(): LogFrontend = withShortPackageKeepLast(0)
 
 public fun LogFrontend.withShortPackageKeepLast(count: Int): LogFrontend = LogFrontend { tag ->
     val pkgs = tag.pkg.split(".")
