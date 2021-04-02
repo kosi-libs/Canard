@@ -70,10 +70,12 @@ More details in xref:logger-factory[factory] section.
 ====
 
 [[default-frontends]]
-=== Default frontends
+=== Using frontends
 
 *_Kodein-Log_* is lightweight because it is just a facade that we plug on top of logging systems.
 _Frontends_ represent the implementations of the logging systems that *_Kodein-Log_* relies on to output your logs, depending on the platform your application is running on.
+
+==== Default frontends
 
 The main reason behind *_Kodein-Log_* existence is that we want to provide an easy way of logging for Kotlin/Multiplatform developers, without worrying about the platform specifics. Therefore, *_Kodein-Log_* has the notion of default frontends, that hide behind the _expect/actual_ mechanism, sending the logs to the right output, depending on the actual platform. Those implementations are accessible with the property `defaultLogFrontend`.
 
@@ -145,11 +147,234 @@ logger.warning { "Its me." } // <3>
 <2> WON'T be logged
 <3> WILL be logged
 
+[[logger-factory]]
+== Share a logger configuration across your application
+
+-> `LoggerFactory`
+
 [[logfilter]]
-== Filter the outputs  (`LogFilter`)
+== Filter the log outputs
+
+Sometimes you may need to control what message should or should not be logged.
+In that regard we provide a simple API, `LogFilter`, that will help to either restrain some outputs, or even add some extra information.
+
+You can use pre-package features or declare xref:custom-filter[custom filters].
+
+=== Allow or block a list of tags / packages
+
+To output only some messages, or just block some of them we can use the functions `allowList` or `bockList`.
+
+[source,kotlin]
+.Allow tags / packages
+----
+val allowList = allowList( // <1>
+      listOf(Logger.Tag(String::class)), // <2>
+      listOf("org.kodein.log"), // <3>
+)
+val factory = LoggerFactory(listOf(defaultLogFrontend), listOf(allowList)) // <4>
+
+newLogger(factory).info { "Hey!" } // <5>
+factory.newLogger<String>().warning { "I know a String." } // <5>
+factory.newLogger<Int>().error { "I know an Int." } // <6>
+----
+<1> TODO()
+<2> TODO()
+<3> TODO()
+<4> TODO()
+<5> TODO()
+<8> TODO()
+
+.Output
+   INFO: 2021-04-02T13:27:06.460152 | org.kodein.log.MyController: Hey!
+WARNING: 2021-04-02T13:27:06.485639 | java.lang.String: I know a String.
+
+[source,kotlin]
+.Block tags / packages
+----
+val allowList = blockList( // <1>
+      listOf(Logger.Tag(String::class)), // <2>
+      listOf("org.kodein.log"), // <3>
+)
+val factory = LoggerFactory(listOf(defaultLogFrontend), listOf(allowList)) // <4>
+
+newLogger(factory).info { "Hey!" } // <5>
+factory.newLogger<String>().warning { "I know a String." } // <5>
+factory.newLogger<Int>().error { "I know an Int." } // <6>
+----
+<1> TODO()
+<2> TODO()
+<3> TODO()
+<4> TODO()
+<5> TODO()
+<6> TODO()
+
+.Output
+  ERROR: 2021-04-02T13:28:54.201783 | java.lang.Integer: I know an Int.
+
+WARNING: By filtering a `Tag` or a package, *_Kodein-Log_* might ignore WARNING and ERROR message.
+
+=== Adding the stacktrace for each log
+
+[source,kotlin]
+----
+val factory = LoggerFactory(listOf(defaultLogFrontend), listOf(logStackTrace)) // <1>
+newLogger(factory).info { "Hey!" } // <2>
+----
+<1> TODO()
+<2> TODO()
+
+.Output
+   INFO: 2021-04-02T13:42:51.593390 | org.kodein.log.MyController: Hey!
+                                      logStackTrace: org.kodein.log.filter.entry.StacktraceKt$logStackTrace$1.filter(stacktrace.kt:7)
+org.kodein.log.Logger.createEntry(Logger.kt:52)
+org.kodein.log.MyController.run(MyController.kt:51)
+java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+java.base/java.lang.reflect.Method.invoke(Method.java:566)
+      [...]
+
+IMPORTANT: This MUST NOT be used in production, its purpose is for debug only!
+
+[[custom-filter]]
+=== Create your own filters
+
+[source,kotlin]
+.ignore every Controller logging message
+----
+val controllerFilter = LogFilter { tag, entry ->
+    if (tag.name.contains("Controller")) null else entry // <1>
+}
+
+val factory = LoggerFactory(listOf(defaultLogFrontend), listOf(controllerFilter)) // <2>
+factory.newLogger<MyController>().info { "Hey!" } // <3>
+factory.newLogger<String>().warning { "It's me." } // <4>
+----
+<1> TODO()
+<2> TODO()
+<3> TODO()
+<4> TODO()
+
+.Output:
+      WARNING: 2021-04-02T13:55:17.876630 | java.lang.String: It's me.
 
 [[logmapper]]
-== Transform the outputs (`LogMapper`)
+== Transform the log outputs
 
-[[logger-factory]]
-== `LoggerFactory`
+=== Package shortener
+
+[source,kotlin]
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend),
+)
+factory.newLogger<MyController>().info { "Hey!" }
+----
+
+   INFO: 2021-04-02T14:56:22.145831 | org.kodein.log.MyController: Hey!
+
+[source,kotlin]
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackages()),
+)
+factory.newLogger<MyController>().info { "Hey!" }
+----
+
+   INFO: 2021-04-02T14:56:50.371374 | o.k.l.MyController: Hey!
+
+[source,kotlin]
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackageShortenFirst(1)),
+)
+factory.newLogger<MyController>().info { "Hey!" }
+----
+
+   INFO: 2021-04-02T14:57:23.595224 | o.kodein.log.MyController: Hey!
+
+[source,kotlin]
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackageKeepLast(1)),
+)
+factory.newLogger<MyController>().info { "Hey!" }
+----
+
+   INFO: 2021-04-02T14:57:41.825104 | o.k.log.MyController: Hey!
+
+=== Prefix
+
+[source,kotlin]
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackage()),
+    mappers = listOf(prefix("API - ")) // <1>
+)
+factory.newLogger<MyController>().apply {
+    info { "User says hello!" } // <2>
+    debug { "User created secret key." } // <2>
+}
+----
+<1> TODO()
+<2> TODO()
+
+.Output
+   INFO: 2021-04-02T14:53:56.599228 | o.k.l.MyController: API - User says hello!
+  DEBUG: 2021-04-02T14:53:56.630881 | o.k.l.MyController: API - User created secret key.
+
+=== Replace
+
+[source,kotlin]
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackage()),
+    mappers = listOf(replace("0123456789abcedf", "[SECRET]")) // <1>
+)
+factory.newLogger<MyController>().apply {
+      info { "User says hello!" } // <2>
+      debug { "User created secret key 0123456789abcedf." } // <3>
+}
+----
+<1> TODO()
+<2> TODO()
+<3> TODO()
+
+.Output
+   INFO: 2021-04-02T14:51:19.343563 | o.k.l.MyController: User says hello!
+  DEBUG: 2021-04-02T14:51:19.365966 | o.k.l.MyController: User created secret key [SECRET].
+
+=== Create your own mappers
+
+[source,kotlin]
+----
+val secretMapper: (Collection<String>) -> LogMapper = { secrets ->
+      LogMapper { _, _, message -> // <1>
+          secrets.fold(message) { m, s ->
+              m.replace(s, "******") // <2>
+          }
+      }
+}
+
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackage()),
+    mappers = listOf(secretMapper(listOf("p4ssw0rd", "0123456789abcedf", "#12345#"))) // <3>
+)
+factory.newLogger<MyController>().apply {
+    info { "User says hello!" } // <4>
+    debug { "User created secret key 0123456789abcedf." } // <5>
+    warning { "User changed secret key p4ssw0rd." } // <5>
+    error { "User failed login with secret key #12345#." } // <5>
+}
+----
+<1> TODO()
+<2> TODO()
+<3> TODO()
+<4> TODO()
+<5> TODO()
+
+.Output
+   INFO: 2021-04-02T14:49:49.670548 | o.k.l.MyController: User says hello!
+  DEBUG: 2021-04-02T14:49:49.693085 | o.k.l.MyController: User created secret key ******.
+WARNING: 2021-04-02T14:49:49.693454 | o.k.l.MyController: User changed secret key ******.
+  ERROR: 2021-04-02T14:49:49.694518 | o.k.l.MyController: User failed login with secret key ******.

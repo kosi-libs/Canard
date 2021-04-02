@@ -37,7 +37,7 @@ to define the format of your logs and on which frontend they should be sent.
 +
 [source,kotlin]
 ----
-val loggerFactory = LoggerFactory(defaultLogFrontend) // <1>
+val loggerFactory = LoggerFactory.default // <1>
 ----
 <1> Initialize a `LoggerFactory` with the default output format.
 
@@ -45,8 +45,8 @@ val loggerFactory = LoggerFactory(defaultLogFrontend) // <1>
 +
 [source,kotlin]
 ----
-class MyController(private val loggerFactory: LoggerFactory) {
-    private val logger = loggerFactory.newLogger<MyController>() // <1>
+class MyController {
+    private val logger = LoggerFactory.default.newLogger<MyController>() // <1>
 }
 ----
 <1> Initialize a `Logger` from a given `LoggerFactory`.
