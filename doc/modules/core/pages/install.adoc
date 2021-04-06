@@ -14,10 +14,8 @@ In your `build.gradle.kts` file, add the Maven Central repository:
 
 [source,kotlin]
 ----
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+repositories {
+    mavenCentral()
 }
 ----
 
@@ -56,10 +54,8 @@ First, add the Maven Central repository:
 
 [source,kotlin]
 ----
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+repositories {
+    mavenCentral()
 }
 ----
 
@@ -79,10 +75,8 @@ Add the Maven Central repository:
 
 [source,kotlin]
 ----
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+repositories {
+    mavenCentral()
 }
 ----
 

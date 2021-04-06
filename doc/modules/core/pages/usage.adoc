@@ -20,11 +20,13 @@ Creating a logger is really simple. Before logging a message you need to express
 Logger(
     tag = Logger.Tag("org.kodein.log.documentation", "MyController"), // <1>
     frontEnds = listOf(defaultLogFrontend) // <2>
-). info { "Hey!" } // <3>
+). info { "Hey!" }
 ----
 <1> will identify any message logged with this `Logger` by prefixing them with this tag
 <2> defines on which outputs the logged messages should be sent.
-<3> log the following line: `INFO: 2021-04-01T12:20:37.648603 | org.kodein.log.documentation.MyController: Hey!`
+
+.Output
+   INFO: 2021-04-01T12:20:37.648603 | org.kodein.log.documentation.MyController: Hey!
 
 [TIP]
 ====
@@ -41,7 +43,7 @@ NOTE: You can share the configuration of your application's loggers by using a x
 [[tags]]
 === Tags
 
-As define above we know that a `Tag` help us identify our logged message.
+As define above we know that a `Tag` helps us identify our logged message.
 A `Tag` is always shaped in two parts, a _package_ and a _class name_.
 
 There are two ways of creating a `Tag`, you can either create it manually using String arguments, or a given `KClass`.
@@ -62,8 +64,8 @@ Tag(MyController::class)
 ====
 The `Tag` can be inferred by Kotlin type system when using one of the extension functions:
 
-- `Logger.from(vararg frontends: LogFrontend)`
-- `LoggerFactory.newLogger()`
+- `Logger.from<T>(vararg frontends: LogFrontend)`
+- `LoggerFactory.newLogger<T>()`
 - `T.newLogger(factory: LoggerFactory)`
 
 More details in xref:logger-factory[factory] section.
@@ -75,7 +77,7 @@ More details in xref:logger-factory[factory] section.
 *_Kodein-Log_* is lightweight because it is just a facade that we plug on top of logging systems.
 _Frontends_ represent the implementations of the logging systems that *_Kodein-Log_* relies on to output your logs, depending on the platform your application is running on.
 
-The main reason behind *_Kodein-Log_* existence is that we want to provide an easy way of logging for Kotlin/Multiplatform developers, without worrying about the platform specifics. Therefore, *_Kodein-Log_* has the notion of default frontends, that hide behind the _expect/actual_ mechanism, sending the logs to the right output, depending on the actual platform. Those implementations are accessible with the property `defaultLogFrontend`.
+The main reason behind *_Kodein-Log_* existence is that we want to provide an easy way of logging for Kotlin/Multiplatform developers, without worrying about the platform specifics. Therefore, *_Kodein-Log_* has the notion of default frontends, that uses the _expect/actual_ mechanism, sending the logs to the right output, depending on the actual platform. Those default implementations are accessible with the property `defaultLogFrontend`.
 
 [source,kotlin]
 .use default log frontend
@@ -149,7 +151,7 @@ logger.warning { "Its me." } // <3>
 == Share a configuration across your application's loggers
 
 This section is for you if you intend to use *_Kodein-Log_* for more than one `Logger` using the same configuration.
-Having multiple loggers with identical configuration in you codebase could end like in the following snippet:
+Having multiple loggers with identical configuration in your codebase could end like in the following snippet:
 
 [source,kotlin]
 ----
@@ -160,7 +162,7 @@ val repoLogger = Logger(Logger.Tag(MyRepository::class), listOf(defaultLogFronte
 // ...
 ----
 
-This can be easily fixed this by using a `LoggerFactory`.
+This can be easily handled by using a `LoggerFactory`.
 
 [source,kotlin]
 .Create a LoggerFactory with a shared configuration
@@ -218,7 +220,7 @@ newLogger(factory).info { "Hey!" } // <5>
 factory.newLogger<String>().warning { "I know a String." } // <5>
 factory.newLogger<Int>().error { "I know an Int." } // <6>
 ----
-<1> `allowList` will block every log but the ones that match the tag / package filters.
+<1> `allowList` will block every log except the ones that match the tag / package filters.
 <2> Logs with the given tags can be sent to the log output.
 <3> Logs with the given packages can be sent to the log output.
 <4> Add the filter to a `LoggerFactory`
@@ -242,7 +244,7 @@ newLogger(factory).info { "Hey!" } // <5>
 factory.newLogger<String>().warning { "I know a String." } // <5>
 factory.newLogger<Int>().error { "I know an Int." } // <6>
 ----
-<1> `blockList` will allow every log but the ones that match the tag / package filters.
+<1> `blockList` will allow every log except the ones that match the tag / package filters.
 <2> Logs with the given tags won't be sent to the log output.
 <3> Logs with the given packages won't be sent to the log output.
 <4> Add the filter to a `LoggerFactory`
@@ -314,7 +316,7 @@ In some cases we need to transform the outputs to reduce the load of the logs, a
 
 === Package shortener
 
-We usally don't need to bloat our logs with an infinite chain of package names.
+We usually don't need to bloat our logs with an infinite chain of package names.
 Let's take an example, where we don't shrink the package names.
 
 [source,kotlin]

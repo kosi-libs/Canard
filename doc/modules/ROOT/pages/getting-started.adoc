@@ -10,10 +10,8 @@ In your `build.gradle.kts` file, add the Maven Central repository:
 
 [source,kotlin]
 ----
-buildscript {
-    repositories {
-        mavenCentral()
-    }
+repositories {
+  mavenCentral()
 }
 ----
 
@@ -39,7 +37,7 @@ to define the format of your logs and on which frontend they should be sent.
 ----
 val loggerFactory = LoggerFactory.default // <1>
 ----
-<1> Initialize a `LoggerFactory` with the default output format.
+<1> Initialize a `LoggerFactory` with the xref:core:usage.adoc#default-frontends[default] output format.
 
 . create a `Logger`
 +
@@ -76,6 +74,6 @@ logger.warning { "...you have completed the Getting Started guide." }
 +
 NOTE: Logging levels available: `debug` / `info` / `warning` / `error`.
 
-More detailed on `Logger` xref:core:usage.adoc#logger[initialization] and xref:core:usage.adoc#levels[usage].
+More detailed on `Logger` xref:core:usage.adoc[initialization and usage].
 
 If you want to know more about frontend implementation you can read xref:core:advanced.adoc[Working with custom frontends].
