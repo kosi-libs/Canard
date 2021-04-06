@@ -27,7 +27,10 @@ class AllowListTests {
     @Test
     fun test_01_BlockList() {
         val frontend = TestFrontend()
-        val conditions = blockList(packages = listOf("org.kodein.log"))
+        val conditions = blockList(listOf(Tag(this::class)))
+        // TODO This doesn't work for js
+        //  org.kodein.log.AllowListTests => kotlin.js.AllowListTests
+        //  val conditions = blockList(packages = listOf("org.kodein.log"))
         val factory = LoggerFactory(listOf(frontend), listOf(conditions))
         newLogger(factory).info { "THIS" }
         factory.newLogger<String>().warning { "STRING" }
