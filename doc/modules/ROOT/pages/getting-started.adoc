@@ -1,0 +1,79 @@
+
+= Getting started with Kodein-Log
+
+NOTE: This guide assumes a JVM target.
+      Kodein-Log works exactly the same on all targets that are supported by Kotlin (JVM, Android, JS, Native).
+
+== Install
+
+In your `build.gradle.kts` file, add the Maven Central repository:
+
+[source,kotlin]
+----
+repositories {
+  mavenCentral()
+}
+----
+
+Then add the dependency:
+
+[source,groovy,subs="attributes"]
+----
+dependencies {
+    implementation 'org.kodein.log:kodein-log:{version}'
+}
+----
+
+More detailed installation guide xref:core:install.adoc[here].
+
+== Create and use a `Logger`
+
+Before being able to log anything, you need to create a `LoggerFactory`,
+to define the format of your logs and on which frontend they should be sent.
+
+. create a `LoggerFactory`
++
+[source,kotlin]
+----
+val loggerFactory = LoggerFactory.default // <1>
+----
+<1> Initialize a `LoggerFactory` with the xref:core:usage.adoc#default-frontends[default] output format.
+
+. create a `Logger`
++
+[source,kotlin]
+----
+class MyController {
+    private val logger = LoggerFactory.default.newLogger<MyController>() // <1>
+}
+----
+<1> Initialize a `Logger` from a given `LoggerFactory`.
++
+[NOTE]
+====
+
+Thanks to the awesome Kotlin type system we can even go further,
+without explicitly naming the Tag used for logging:
+
+[source,kotlin]
+----
+class MyController(private val loggerFactory: LoggerFactory) {
+    private val logger = newLogger(loggerFactory) // <1>
+}
+----
+<1> Initialize a `Logger` from a given `LoggerFactory`, implicitly tagged with `MyController`.
+====
+
+. Use the logger
++
+[source,kotlin]
+----
+logger.info { "Well done..." }
+logger.warning { "...you have completed the Getting Started guide." }
+----
++
+NOTE: Logging levels available: `debug` / `info` / `warning` / `error`.
+
+More detailed on `Logger` xref:core:usage.adoc[initialization and usage].
+
+If you want to know more about frontend implementation you can read xref:core:advanced.adoc[Working with custom frontends].

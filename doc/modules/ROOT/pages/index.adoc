@@ -1,0 +1,42 @@
+image::kodein-log-logo.svg[KODEIN-LOG, 700]
+
+[.lead]
+*_Kodein-Log_* is a lightweight Kotlin/Multiplatform logging library with a simple API, that works on JVM, Android, JavaScript, iOS, as well as for all Kotlin/Native targets.
+
+*_Kodein-Log_* allows you to:
+
+- easily setup logging in a Kotlin/Multiplatform
+- simply log what you need on different level
+- avoid carrying about platform specific frontends' implementations
+
+*_Kodein-Log_* is a good choice because:
+
+- it integrates nicely with all the Kotlin/Multiplatform targets
+- it is small and simple to grasp with an easy and understandable API
+
+== Example
+
+[source, kotlin]
+.simple example
+----
+val loggerFactory = LoggerFactory(defaultLogFrontend)
+val logger = newLogger(loggerFactory)
+
+logger.info { "Welcome to ..." }
+logger.warning { "... the Kodein-Log documentation!" }
+----
+
+== Support
+
+- Drop by the https://kotlinlang.slack.com/messages/kodein/[Kodein Slack channel]
+- https://stackoverflow.com/questions/tagged/kodein[Stackoverflow] with the tag #kodein
+
+== Contribute
+
+Contributions are very welcome and greatly appreciated! The great majority of pull requests are eventually merged.
+
+To contribute, simply fork https://github.com/Kodein-Framework/Kodein-Log[the project on Github], fix whatever is iching you, and submit a pull request!
+
+I am sure that this documentation contains typos, inaccuracies and languages error (English is not our mother tongue).
+If you feel like enhancing this document, you can propose a pull request that modifies https://github.com/Kodein-Framework/Kodein-Log/tree/master/doc[the documentation documents].
+(Documentation is auto-generated from those).

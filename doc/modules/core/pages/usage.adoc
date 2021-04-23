@@ -1,0 +1,459 @@
+= Kodein-Log usage
+
+*_Kodein-Log_* allows to easily log any message, with a simple API.
+This guide is meant to walk you through all you need to know and use *_Kodein-Log_*.
+
+NOTE: *_Kodein-Log_* API is the same for all the Kotlin/Multiplatform targets.
+      However, under the hood each platform uses its own implementation (see xref:default-frontends[default frontends]).
+
+[[logger]]
+== `Logger`
+
+Creating a logger is really simple. Before logging a message you need to express some parameters to help the logger to:
+
+- identify the logged entry, with a xref:tags[`Tag`], like `org.kodein.documentation.MyController`
+- send the logged entry to the right output: console / file / platform specific logging system
+
+[source,kotlin]
+.create a simple Logger
+----
+Logger(
+    tag = Logger.Tag("org.kodein.log.documentation", "MyController"), // <1>
+    frontEnds = listOf(defaultLogFrontend) // <2>
+). info { "Hey!" }
+----
+<1> will identify any message logged with this `Logger` by prefixing them with this tag
+<2> defines on which outputs the logged messages should be sent.
+
+.Output
+   INFO: 2021-04-01T12:20:37.648603 | org.kodein.log.documentation.MyController: Hey!
+
+[TIP]
+====
+You can also use the companion function `Logger.from<T>` to create a logger.
+[source,kotlin]
+----
+Logger.from(defaultLogFrontend) // <1>
+----
+<1> Type receiver is inferred at compile time and automatically passed as `tag` argument to a new `Logger` instance.
+====
+
+NOTE: You can share the configuration of your application's loggers by using a xref:logger-factory[factory].
+
+[[tags]]
+=== Tags
+
+As define above we know that a `Tag` helps us identify our logged message.
+A `Tag` is always shaped in two parts, a _package_ and a _class name_.
+
+There are two ways of creating a `Tag`, you can either create it manually using String arguments, or a given `KClass`.
+
+[source,kotlin]
+.Create a `Tag` manually
+----
+Tag(pckg = "org.kodein.log.documentation", name = "MyController")
+----
+
+[source,kotlin]
+.Create a `Tag` from a class
+----
+Tag(MyController::class)
+----
+
+[TIP]
+====
+The `Tag` can be inferred by Kotlin type system when using one of the extension functions:
+
+- `Logger.from<T>(vararg frontends: LogFrontend)`
+- `LoggerFactory.newLogger<T>()`
+- `T.newLogger(factory: LoggerFactory)`
+
+More details in xref:logger-factory[factory] section.
+====
+
+[[default-frontends]]
+=== Default frontends
+
+*_Kodein-Log_* is lightweight because it is just a facade that we plug on top of logging systems.
+_Frontends_ represent the implementations of the logging systems that *_Kodein-Log_* relies on to output your logs, depending on the platform your application is running on.
+
+The main reason behind *_Kodein-Log_* existence is that we want to provide an easy way of logging for Kotlin/Multiplatform developers, without worrying about the platform specifics. Therefore, *_Kodein-Log_* has the notion of default frontends, that uses the _expect/actual_ mechanism, sending the logs to the right output, depending on the actual platform. Those default implementations are accessible with the property `defaultLogFrontend`.
+
+[source,kotlin]
+.use default log frontend
+----
+Logger.from(defaultLogFrontend) // <1>
+----
+<1> Use the specific frontend defined by *_Kodein-Log_*
+
+Here is a table that expose which implementation are used, by
+targeted platform.
+
+[cols="1*,1*^.^"]
+|===
+|Targeted platform ^.^|Frontend implementation
+
+|JVM
+|http://www.slf4j.org[SLF4J]
+
+|Android
+^.^|https://developer.android.com/reference/android/util/Log[Android Log]
+
+a|Apple
+
+- iOS
+- macOS
+- watchOS
+- tvOS
+
+^.^|https://developer.apple.com/documentation/oslog[Apple OSLog]
+
+a|Other Kotlin/Native targets
+
+- Linux
+- Windows
+
+^.^|System standard output
+
+|Kotlin/JS
+^.^|https://developer.mozilla.org/en-US/docs/Web/API/Console/log[JavaScript console log]
+|===
+
+TIP: Remember that you can define your own xref:advanced.adoc#custom-frontends[frontends].
+
+[[severity]]
+=== Severity
+
+As for any logging library *_Kodein-Log_* provide different severities to log messages:
+
+- `logger.debug("Hey!")` -> `DEBUG: <TIME> | <TAG>: Hey!`
+- `logger.info("Hey!")` -> `INFO: <TIME> | <TAG>: Hey!`
+- `logger.warning("Hey!")` -> `WARNING: <TIME> | <TAG>: Hey!`
+- `logger.error("Hey!")` -> `ERROR: <TIME> | <TAG>: Hey!`
+
+You can filter the level of log output by using a `LogFilter`:
+
+[source,kotlin]
+----
+val logger = Logger.from(
+    frontends = listOf(defaultLogFrontend),
+    filters = listOf(minimumLevel(Logger.Level.WARNING)), // <1>
+)
+logger.info { "Hey!" } // <2>
+logger.warning { "Its me." } // <3>
+
+----
+<1> define the minimum severity to `WARNING`
+<2> WON'T be logged
+<3> WILL be logged
+
+[[logger-factory]]
+== Share a configuration across your application's loggers
+
+This section is for you if you intend to use *_Kodein-Log_* for more than one `Logger` using the same configuration.
+Having multiple loggers with identical configuration in your codebase could end like in the following snippet:
+
+[source,kotlin]
+----
+// MyController.kt
+val ctrlLogger = Logger(Logger.Tag(MyController::class), listOf(defaultLogFrontend))
+// MyRepository.kt
+val repoLogger = Logger(Logger.Tag(MyRepository::class), listOf(defaultLogFrontend))
+// ...
+----
+
+This can be easily handled by using a `LoggerFactory`.
+
+[source,kotlin]
+.Create a LoggerFactory with a shared configuration
+----
+val factory = LoggerFactory(listOf(defaultLogFrontend), /* filters = listOf(...), mappers = listOf(...) */ ) // <1>
+//        or  LoggerFactory(defaultLogFrontend) // <1>
+//        or  LoggerFactory.default // <2>
+----
+<1> You can use your own frontends, filters and mappers.
+<2> Quick access to a LoggerFactory via the xref:default-frontends[defaultLogFrontend].
+
+TIP: Like for the `Logger`, the `LoggerFactory` can work with multiple xref:default-frontends[frontends], xref:logfilter[filters] and xref:logmapper[mappers].
+
+Then, you can create as many `Logger` as needed with the different `newLogger` functions.
+
+[source,kotlin]
+.Create a Logger from a LoggerFactory
+----
+        factory.newLogger(Logger.Tag(MyRepository::class)) // <1>
+//  or  factory.newLogger(MyRepository::class) // <2>
+//  or  factory.newLogger<MyRepository>() // <3>
+/*  or
+        class MyRepository(loggerFactory: LoggerFactory) {
+            val logger = newLogger(loggerFactory) <4>
+        }
+*/
+----
+<1> Creates and passes a `Tag`.
+<2> Uses a `KClass` that will be mapped as a `Tag`.
+<3> Uses a type parameter, that will be mapped as a `Tag`.
+<4> Type parameter is inferred by Kotlin at compile time and used to create a `Tag`.
+
+[[logfilter]]
+== Filter the log outputs
+
+Sometimes you may need to control what message should or should not be logged.
+In that regard we provide a simple API, `LogFilter`, that will help to either restrain some outputs, or even add some extra information.
+
+You can use pre-package features or declare xref:custom-filter[custom filters].
+
+=== Allow or block a list of tags / packages
+
+To output only some messages, or just block some of them we can use the functions `allowList` or `bockList`.
+
+[source,kotlin]
+.Allow tags / packages
+----
+val allowList = allowList( // <1>
+      listOf(Logger.Tag(String::class)), // <2>
+      listOf("org.kodein.log"), // <3>
+)
+val factory = LoggerFactory(listOf(defaultLogFrontend), listOf(allowList)) // <4>
+
+newLogger(factory).info { "Hey!" } // <5>
+factory.newLogger<String>().warning { "I know a String." } // <5>
+factory.newLogger<Int>().error { "I know an Int." } // <6>
+----
+<1> `allowList` will block every log except the ones that match the tag / package filters.
+<2> Logs with the given tags can be sent to the log output.
+<3> Logs with the given packages can be sent to the log output.
+<4> Add the filter to a `LoggerFactory`
+<5> Match the filters; WILL be logged
+<6> Doesn't match the filters; WON'T be logged
+
+.Output
+   INFO: 2021-04-02T13:27:06.460152 | org.kodein.log.MyController: Hey!
+WARNING: 2021-04-02T13:27:06.485639 | java.lang.String: I know a String.
+
+[source,kotlin]
+.Block tags / packages
+----
+val blockList = blockList( // <1>
+      listOf(Logger.Tag(String::class)), // <2>
+      listOf("org.kodein.log"), // <3>
+)
+val factory = LoggerFactory(listOf(defaultLogFrontend), listOf(blockList)) // <4>
+
+newLogger(factory).info { "Hey!" } // <5>
+factory.newLogger<String>().warning { "I know a String." } // <5>
+factory.newLogger<Int>().error { "I know an Int." } // <6>
+----
+<1> `blockList` will allow every log except the ones that match the tag / package filters.
+<2> Logs with the given tags won't be sent to the log output.
+<3> Logs with the given packages won't be sent to the log output.
+<4> Add the filter to a `LoggerFactory`
+<5> Match the filters; WON'T be logged
+<6> Doesn't match the filters; WILL be logged
+
+.Output
+  ERROR: 2021-04-02T13:28:54.201783 | java.lang.Integer: I know an Int.
+
+WARNING: By filtering a `Tag` or a package, *_Kodein-Log_* might ignore WARNING and ERROR messages.
+
+=== Adding the stacktrace for each log
+
+WARNING: _In case of emergency: Break glass._
+
+While debugging your application you might need some extra information to really understand what's going on.
+Adding the filter `logStackTrace` to your logger configuration will print out the current stack trace that goes with EVERY logging message of your application. Even if it can appear as an handy feature, it is very sloooow! So you should not use is in production.
+
+[source,kotlin]
+----
+val factory = LoggerFactory(listOf(defaultLogFrontend), listOf(logStackTrace)) // <1>
+newLogger(factory).info { "Hey!" } // <2>
+----
+<1> Activate the `logStackTrace` filter.
+<2> Prints "Hey!" with its accompanying stack trace.
+
+.Output
+   INFO: 2021-04-02T13:42:51.593390 | org.kodein.log.MyController: Hey!
+                                      logStackTrace: org.kodein.log.filter.entry.StacktraceKt$logStackTrace$1.filter(stacktrace.kt:7)
+org.kodein.log.Logger.createEntry(Logger.kt:52)
+org.kodein.log.MyController.run(MyController.kt:51)
+java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+java.base/java.lang.reflect.Method.invoke(Method.java:566)
+      [...]
+
+IMPORTANT: This MUST NOT be used in production, its purpose is for debug only!
+
+[[custom-filter]]
+=== Create your own filters
+
+If existing filters do not fit your needs you can create your own.
+For example, let's create a filter that will ignore every log that match a certain `Tag`.
+
+[source,kotlin]
+.ignore every logging entry for tags that contains "Controller"
+----
+val controllerFilter = LogFilter { tag, entry ->  // <1>
+    if (tag.name.contains("Controller")) null else entry
+}
+
+val factory = LoggerFactory(listOf(defaultLogFrontend), listOf(controllerFilter)) // <2>
+factory.newLogger<MyController>().info { "Hey!" } // <3>
+factory.newLogger<String>().warning { "It's me." } // <4>
+----
+<1> Create a LogFilter.
+<2> Add the filter to the `LoggerFactory` configuraiton.
+<3> WON'T be logged as the tag name contains "Controller".
+<4> WILL be logged.
+
+.Output
+      WARNING: 2021-04-02T13:55:17.876630 | java.lang.String: It's me.
+
+[[logmapper]]
+== Transform the log outputs
+
+In some cases we need to transform the outputs to reduce the load of the logs, add some extras, or even shrink some sensitive information.
+
+=== Package shortener
+
+We usually don't need to bloat our logs with an infinite chain of package names.
+Let's take an example, where we don't shrink the package names.
+
+[source,kotlin]
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend),
+)
+factory.newLogger<MyController>().info { "Hey!" }
+----
+
+.This will output the following line
+   INFO: 2021-04-02T14:56:22.145831 | org.kodein.log.MyController: Hey!
+
+Considering our context, we clearly know that we are working on `org.kodein` libraries,
+so we could reduce those package names, by keeping only the last one, `log`:
+
+[source,kotlin]
+.shrink every package names execpet the last one
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackageKeepLast(1)),
+)
+factory.newLogger<MyController>().info { "Hey!" }
+----
+
+.Output
+   INFO: 2021-04-02T14:57:41.825104 | o.k.log.MyController: Hey!
+
+On the contrary you might want to drop only the first package names:
+
+[source,kotlin]
+.shrink only the first package name
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackageShortenFirst(1)),
+)
+factory.newLogger<MyController>().info { "Hey!" }
+----
+
+.Output
+   INFO: 2021-04-02T14:57:23.595224 | o.kodein.log.MyController: Hey!
+
+Or, we also can reduce our logs by narrowing all the package names.
+
+[source,kotlin]
+.shrink every pacakge name
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackages()),
+)
+factory.newLogger<MyController>().info { "Hey!" }
+----
+
+.Output
+   INFO: 2021-04-02T14:56:50.371374 | o.k.l.MyController: Hey!
+
+=== Prefix
+
+If you work with multiple instances of a class, you might want to distinguish every instances by adding a prefix to its outputs.
+
+[source,kotlin]
+.adding a prefix in the log configuration
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackage()),
+    mappers = listOf(prefix("API 1 - ")) // <1>
+)
+factory.newLogger<MyController>().apply {
+    info { "User says hello!" } // <2>
+    debug { "User created secret key." } // <2>
+}
+----
+<1> "API 1 - "  will be added as a prefix of each log
+<2> will be prefixed
+
+.Output
+   INFO: 2021-04-02T14:53:56.599228 | o.k.l.MyController: API 1 - User says hello!
+  DEBUG: 2021-04-02T14:53:56.630881 | o.k.l.MyController: API 1 - User created secret key.
+
+=== Replace
+
+This one is handy, as you can replace any `String` or any pattern in all your logs.
+For example, you can avoid leaking secrets:
+
+[source,kotlin]
+----
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackage()),
+    mappers = listOf(replace("0123456789abcedf", "[SECRET]")) // <1>
+)
+factory.newLogger<MyController>().apply {
+      info { "User says hello!" } // <2>
+      debug { "User created secret key 0123456789abcedf." } // <3>
+}
+----
+<1> the given password should be replace by a proper placeholder
+<2> logged as usual
+<3> actual secret will be replaced by "[SECRET]"
+
+.Output
+   INFO: 2021-04-02T14:51:19.343563 | o.k.l.MyController: User says hello!
+  DEBUG: 2021-04-02T14:51:19.365966 | o.k.l.MyController: User created secret key [SECRET].
+
+=== Create your own mappers
+
+Again, if existing mappers does not work for you, you can create your own.
+Here is an example of a secret mapper, that will hide a given list of secrets in the output logs:
+
+[source,kotlin]
+----
+val secretMapper: (Collection<String>) -> LogMapper = { secrets ->
+      LogMapper { _, _, message -> // <1>
+          secrets.fold(message) { m, s ->
+              m.replace(s, "******") // <2>
+          }
+      }
+}
+
+val factory = LoggerFactory(
+    listOf(defaultLogFrontend.withShortPackage()),
+    mappers = listOf(secretMapper(listOf("p4ssw0rd", "0123456789abcedf", "#12345#"))) // <3>
+)
+factory.newLogger<MyController>().apply {
+    info { "User says hello!" } // <4>
+    debug { "User created secret key 0123456789abcedf." } // <5>
+    warning { "User changed secret key p4ssw0rd." } // <5>
+    error { "User failed login with secret key #12345#." } // <5>
+}
+----
+<1> create the `LogMapper`
+<2> replace every secret by `******`
+<3> apply the filter with a given list of secrets
+<4> logged as usual
+<5> every secrets are hidden (see output below)
+
+.Output
+   INFO: 2021-04-02T14:49:49.670548 | o.k.l.MyController: User says hello!
+  DEBUG: 2021-04-02T14:49:49.693085 | o.k.l.MyController: User created secret key ******.
+WARNING: 2021-04-02T14:49:49.693454 | o.k.l.MyController: User changed secret key ******.
+  ERROR: 2021-04-02T14:49:49.694518 | o.k.l.MyController: User failed login with secret key ******.

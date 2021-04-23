@@ -1,0 +1,41 @@
+= Advanced
+
+[[custom-frontends]]
+== Working with custom frontends
+
+*_Kodein-Log_* is a facade for multiplatform developers that need an easy way to log without worrying about platform specific implementation. For that we provide xref:usage.adoc#default-frontends[[default frontends]] that are default output capacities, for each possible target of Kotlin/Multiplatform.
+
+However, we can think of a lot of use cases that might not covered by default frontends, ike saving the logs into a file, sending the logs to an upstream system, etc.
+
+If you want to use a custom implementation to handle your logs, you can create your own by using the interface `LogFrontend`.
+
+[source,kotlin]
+.`logFrontend`
+----
+public fun interface LogFrontend {
+    public fun getReceiverFor(tag: Logger.Tag): LogReceiver // <1>
+}
+----
+<1> You only have to override `getReceiverFor`.
+
+The `getReceiverFor` function will define what we should do of every logged entry. The rest depends on your use case. Here is an example of a frontend that will stack every log into a list:
+
+[source,kotlin]
+.custom frontend
+----
+class MemoryFrontend : LogFrontend { // <1>
+    val entries: MutableList<Triple<Logger.Tag, Logger.Entry, String?>> = ArrayList() // <2>
+
+    override fun getReceiverFor(tag: Logger.Tag): LogReceiver = // <3>
+        LogReceiver { entry, message -> // <4>
+            entries += Triple(tag, entry, message) // <5>
+        }
+}
+----
+<1> implement `LogFrontend`
+<2> create a mutable list that will carry the logs
+<3> override `getReceiveFor`
+<4> create a `LogReceiver` ...
+<5> ... that populate the `entries` with each log received
+
+NOTE: We could use this example to periodically send our stack to an upstream server.
