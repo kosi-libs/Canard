@@ -7,7 +7,7 @@ kodein {
         val datetimeMain by sourceSets.creating {
             dependsOn(common.main)
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.2.0")
             }
         }
 
