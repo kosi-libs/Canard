@@ -1,3 +1,5 @@
+@file:OptIn(UnsafeNumber::class)
+
 package org.kodein.log
 
 import kotlinx.cinterop.*

@@ -56,6 +56,12 @@ kodein {
             main.dependsOn(datetimeMain)
             mainCompilation.cinterops.create("darwin_log")
         }
+
+        sourceSets.all {
+            languageSettings {
+                optIn("kotlin.RequiresOptIn")
+            }
+        }
     }
 }
 
