@@ -1,12 +1,12 @@
 name: kodein-log
 title: Kodein-Log
-version: '0.12'
-display_version: '0.12.0'
+version: '0.13'
+display_version: '0.13.0'
 nav:
   - modules/ROOT/nav.adoc
   - modules/core/nav.adoc
 asciidoc:
   attributes:
-    version: '0.12.0'
-    kotlin: '1.6.10'
+    version: '0.13.0'
+    kotlin: '1.6.20'
     jdk: '1.8'
