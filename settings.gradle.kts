@@ -4,15 +4,15 @@ buildscript {
         maven(url = "https://raw.githubusercontent.com/kosi-libs/kodein-internal-gradle-plugin/mvn-repo")
     }
     dependencies {
-        classpath("org.kodein.internal.gradle:kodein-internal-gradle-settings:6.17.1")
+        classpath("org.kodein.internal.gradle:kodein-internal-gradle-settings:6.18.0")
     }
 }
 
 apply { plugin("org.kodein.settings") }
 
-rootProject.name = "Kodein-Log"
+rootProject.name = "Canard"
 
 include(
-        ":kodein-log",
+        ":canard",
         ""
 )

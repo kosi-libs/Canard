@@ -7,7 +7,7 @@ kodein {
         val datetimeMain by sourceSets.creating {
             dependsOn(common.main)
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
             }
         }
 
@@ -15,7 +15,7 @@ kodein {
             main.dependsOn(datetimeMain)
             target.setCompileClasspath()
             main.dependencies {
-                implementation("org.slf4j:slf4j-api:1.7.30")
+                implementation("org.slf4j:slf4j-api:1.7.36")
                 compileOnly(rootProject.files("libs/android-log.jar"))
             }
         }
