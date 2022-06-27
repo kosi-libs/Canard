@@ -1,12 +1,12 @@
-name: kodein-log
-title: Kodein-Log
-version: '0.13'
-display_version: '0.13.0'
+name: canard
+title: canard
+version: '0.14'
+display_version: '0.14.0'
 nav:
   - modules/ROOT/nav.adoc
   - modules/core/nav.adoc
 asciidoc:
   attributes:
-    version: '0.13.0'
-    kotlin: '1.6.20'
+    version: '0.14.0'
+    kotlin: '1.7.0'
     jdk: '1.8'

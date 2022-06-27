@@ -3,7 +3,7 @@
 [[custom-frontends]]
 == Working with custom frontends
 
-*_Kodein-Log_* is a facade for multiplatform developers that need an easy way to log without worrying about platform specific implementation. For that we provide xref:usage.adoc#default-frontends[[default frontends]] that are default output capacities, for each possible target of Kotlin/Multiplatform.
+*_Canard_* is a facade for multiplatform developers that need an easy way to log without worrying about platform specific implementation. For that we provide xref:usage.adoc#default-frontends[[default frontends]] that are default output capacities, for each possible target of Kotlin/Multiplatform.
 
 However, we can think of a lot of use cases that might not covered by default frontends, ike saving the logs into a file, sending the logs to an upstream system, etc.
 

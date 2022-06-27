@@ -66,6 +66,6 @@ kodein {
 }
 
 kodeinUpload {
-    name = "Kodein-Log"
-    description = "Kodein Log Library"
+    name = "Canard"
+    description = "Kotlin Multiplatform Log Library"
 }

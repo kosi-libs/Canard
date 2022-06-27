@@ -1,9 +1,9 @@
-= Kodein-Log usage
+= Canard usage
 
-*_Kodein-Log_* allows to easily log any message, with a simple API.
-This guide is meant to walk you through all you need to know and use *_Kodein-Log_*.
+*_Canard_* allows to easily log any message, with a simple API.
+This guide is meant to walk you through all you need to know and use *_Canard_*.
 
-NOTE: *_Kodein-Log_* API is the same for all the Kotlin/Multiplatform targets.
+NOTE: *_Canard_* API is the same for all the Kotlin/Multiplatform targets.
       However, under the hood each platform uses its own implementation (see xref:default-frontends[default frontends]).
 
 [[logger]]
@@ -74,17 +74,17 @@ More details in xref:logger-factory[factory] section.
 [[default-frontends]]
 === Default frontends
 
-*_Kodein-Log_* is lightweight because it is just a facade that we plug on top of logging systems.
-_Frontends_ represent the implementations of the logging systems that *_Kodein-Log_* relies on to output your logs, depending on the platform your application is running on.
+*_Canard_* is lightweight because it is just a facade that we plug on top of logging systems.
+_Frontends_ represent the implementations of the logging systems that *_Canard_* relies on to output your logs, depending on the platform your application is running on.
 
-The main reason behind *_Kodein-Log_* existence is that we want to provide an easy way of logging for Kotlin/Multiplatform developers, without worrying about the platform specifics. Therefore, *_Kodein-Log_* has the notion of default frontends, that uses the _expect/actual_ mechanism, sending the logs to the right output, depending on the actual platform. Those default implementations are accessible with the property `defaultLogFrontend`.
+The main reason behind *_Canard_* existence is that we want to provide an easy way of logging for Kotlin/Multiplatform developers, without worrying about the platform specifics. Therefore, *_Canard_* has the notion of default frontends, that uses the _expect/actual_ mechanism, sending the logs to the right output, depending on the actual platform. Those default implementations are accessible with the property `defaultLogFrontend`.
 
 [source,kotlin]
 .use default log frontend
 ----
 Logger.from(defaultLogFrontend) // <1>
 ----
-<1> Use the specific frontend defined by *_Kodein-Log_*
+<1> Use the specific frontend defined by *_Canard_*
 
 Here is a table that expose which implementation are used, by
 targeted platform.
@@ -124,7 +124,7 @@ TIP: Remember that you can define your own xref:advanced.adoc#custom-frontends[f
 [[severity]]
 === Severity
 
-As for any logging library *_Kodein-Log_* provide different severities to log messages:
+As for any logging library *_Canard_* provide different severities to log messages:
 
 - `logger.debug("Hey!")` -> `DEBUG: <TIME> | <TAG>: Hey!`
 - `logger.info("Hey!")` -> `INFO: <TIME> | <TAG>: Hey!`
@@ -150,7 +150,7 @@ logger.warning { "Its me." } // <3>
 [[logger-factory]]
 == Share a configuration across your application's loggers
 
-This section is for you if you intend to use *_Kodein-Log_* for more than one `Logger` using the same configuration.
+This section is for you if you intend to use *_Canard_* for more than one `Logger` using the same configuration.
 Having multiple loggers with identical configuration in your codebase could end like in the following snippet:
 
 [source,kotlin]
@@ -254,7 +254,7 @@ factory.newLogger<Int>().error { "I know an Int." } // <6>
 .Output
   ERROR: 2021-04-02T13:28:54.201783 | java.lang.Integer: I know an Int.
 
-WARNING: By filtering a `Tag` or a package, *_Kodein-Log_* might ignore WARNING and ERROR messages.
+WARNING: By filtering a `Tag` or a package, *_Canard_* might ignore WARNING and ERROR messages.
 
 === Adding the stacktrace for each log
 

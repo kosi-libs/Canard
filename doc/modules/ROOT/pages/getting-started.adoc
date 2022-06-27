@@ -1,8 +1,8 @@
 
-= Getting started with Kodein-Log
+= Getting started with Canard
 
 NOTE: This guide assumes a JVM target.
-      Kodein-Log works exactly the same on all targets that are supported by Kotlin (JVM, Android, JS, Native).
+      Canard works exactly the same on all targets that are supported by Kotlin (JVM, Android, JS, Native).
 
 == Install
 
@@ -20,7 +20,7 @@ Then add the dependency:
 [source,groovy,subs="attributes"]
 ----
 dependencies {
-    implementation 'org.kodein.log:kodein-log:{version}'
+    implementation 'org.kodein.log:canard:{version}'
 }
 ----
 

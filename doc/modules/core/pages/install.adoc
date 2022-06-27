@@ -1,13 +1,13 @@
 [[install]]
 = Install
 
-IMPORTANT: *_Kodein-Log_* uses the new gradle native dependency model.
+IMPORTANT: *_Canard_* uses the new gradle native dependency model.
             Thus, we highly recommend to use Gradle 6 or higher.
 
 [[install-kmp]]
 == Kotlin/Multiplatform
 
-NOTE: Kodein-Log supports the following targets: +
+NOTE: Canard supports the following targets: +
 jvm, iosArm32, iosArm64, iosX64, JS, tvosarm64, tvosx64, watchosarm32, watchosarm64, watchosx86, linuxArm32Hfp, linuxMips32, linuxMipsel32, linuxX64, macosX64, mingwX64.
 
 In your `build.gradle.kts` file, add the Maven Central repository:
@@ -27,7 +27,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("org.kodein.log:kodein-log:{version}")
+                implementation("org.kodein.log:canard:{version}")
             }
         }
     }
@@ -48,7 +48,7 @@ enableFeaturePreview("GRADLE_METADATA")
 [[install-jvm]]
 == JVM & Android
 
-On the JVM, *_Kodein-Log_* is compatible with both standard JVM and Android environments, with the same configuration.
+On the JVM, *_Canard_* is compatible with both standard JVM and Android environments, with the same configuration.
 
 First, add the Maven Central repository:
 
@@ -64,7 +64,7 @@ Then add the dependency:
 [source,kotlin,subs="attributes"]
 ----
 dependencies {
-    implementation("org.kodein.log:kodein-log-jvm:{version}")
+    implementation("org.kodein.log:canard-jvm:{version}")
 }
 ----
 
@@ -85,6 +85,6 @@ Then add the dependency:
 [source,kotlin,subs="attributes"]
 ----
 dependencies {
-    implementation("org.kodein.log:kodein-log-js:{version}")
+    implementation("org.kodein.log:canard-js:{version}")
 }
 ----
