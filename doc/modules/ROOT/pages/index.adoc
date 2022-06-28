@@ -1,5 +1,3 @@
-image::kodein-log-logo.svg[KODEIN-LOG, 700]
-
 [.lead]
 *_Canard_* is a lightweight Kotlin/Multiplatform logging library with a simple API, that works on JVM, Android, JavaScript, iOS, as well as for all Kotlin/Native targets.
 
