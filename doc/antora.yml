@@ -1,12 +1,12 @@
 name: canard
 title: Canard
-version: '0.15'
-display_version: '0.15.0'
+version: '0.16-kotlin-1.7.20-RC'
+display_version: '0.16.0-kotlin-1.7.20-RC'
 nav:
   - modules/ROOT/nav.adoc
   - modules/core/nav.adoc
 asciidoc:
   attributes:
-    version: '0.15.0'
-    kotlin: '1.7.10'
+    version: '0.16.0-kotlin-1.7.20-RC'
+    kotlin: '1.7.20-RC'
     jdk: '1.8'
