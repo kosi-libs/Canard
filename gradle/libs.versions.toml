@@ -1,0 +1,7 @@
+[versions]
+kotlinx-datetime = "0.4.0"
+slf4j = "1.7.36"
+
+[libraries]
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }

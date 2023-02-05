@@ -7,7 +7,7 @@ kodein {
         val datetimeMain by sourceSets.creating {
             dependsOn(common.main)
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+                api(libs.kotlinx.datetime)
             }
         }
 
@@ -15,12 +15,12 @@ kodein {
             main.dependsOn(datetimeMain)
             target.setCompileClasspath()
             main.dependencies {
-                implementation("org.slf4j:slf4j-api:1.7.36")
+                implementation(libs.slf4j.api)
                 compileOnly(rootProject.files("libs/android-log.jar"))
             }
         }
 
-        add(kodeinTargets.js.ir.js) {
+        add(kodeinTargets.js.js) {
             main.dependsOn(datetimeMain)
             configure(listOf(mainCompilation, testCompilation)) {
                 kotlinOptions {
