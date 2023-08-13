@@ -1,7 +1,12 @@
+@file:OptIn(ExperimentalNativeApi::class, ExperimentalForeignApi::class)
+
 package org.kodein.log.frontend
 
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.cstr
-import platform.posix.*
+import platform.posix.fdopen
+import platform.posix.fprintf
+import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.concurrent.SharedImmutable
 
 

@@ -1,4 +1,4 @@
-@file:OptIn(UnsafeNumber::class)
+@file:OptIn(ExperimentalForeignApi::class)
 
 package org.kodein.log
 

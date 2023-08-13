@@ -1,8 +1,8 @@
 plugins {
-    id("org.kodein.root")
+    kodein.root
 }
 
 allprojects {
     group = "org.kodein.log"
-    version = "0.18.0"
+    version = "0.19.0"
 }
