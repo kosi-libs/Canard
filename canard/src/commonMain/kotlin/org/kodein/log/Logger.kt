@@ -58,7 +58,6 @@ private val defaultFrontEnds by lazy {
     listOf(defaultLogFrontend)
 }
 
-@Suppress("NOTHING_TO_INLINE")
 /**
  * Logger
  */
@@ -87,7 +86,7 @@ public class Logger(
     /**
      * Metadata that helps describe log messages
      */
-    public data class Entry(val level: Level, val ex: Throwable? = null, val meta: Map<String, Any> = emptyMap(), val instant: Instant = now())
+    public data class Entry(val level: Level, val ex: Throwable? = null, val meta: Map<String, Any> = emptyMap(), val timestamp: Timestamp = now())
 
     @PublishedApi
     internal fun createEntry(level: Level, error: Throwable? = null, meta: Map<String, Any>): Entry? =
@@ -123,6 +122,7 @@ public class Logger(
     /**
      * Log an exception with [WARNING] severity
      */
+    @Suppress("NOTHING_TO_INLINE")
     public inline fun warning(ex: Throwable) { log(level = WARNING, error = ex) }
 
     /**
@@ -132,6 +132,7 @@ public class Logger(
     /**
      * Log an exception with [ERROR] severity
      */
+    @Suppress("NOTHING_TO_INLINE")
     public inline fun error(ex: Throwable) { log(level = ERROR, error = ex) }
 
     public companion object {
