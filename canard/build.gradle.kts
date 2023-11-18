@@ -3,7 +3,10 @@ plugins {
 }
 
 kotlin.kodein {
-    all()
+    allNative()
+    js()
+    wasmJs()
+//    wasmWasi()
 
     jvm {
         target.setCompileClasspath()
@@ -36,7 +39,6 @@ kotlin.kodein {
             dependsOn(defaultNativeMain)
         }
     }
-
 }
 
 kodeinUpload {

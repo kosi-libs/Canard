@@ -5,7 +5,6 @@ import kotlinx.cinterop.cstr
 import platform.posix.fdopen
 import platform.posix.fprintf
 import kotlin.experimental.ExperimentalNativeApi
-import kotlin.native.concurrent.SharedImmutable
 
 
 @OptIn(ExperimentalForeignApi::class)

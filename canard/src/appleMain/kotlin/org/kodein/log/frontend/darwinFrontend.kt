@@ -1,10 +1,12 @@
 package org.kodein.log.frontend
 
+import kotlinx.cinterop.ExperimentalForeignApi
 import org.kodein.log.LogFrontend
 import org.kodein.log.LogReceiver
 import org.kodein.log.Logger
 import org.kodein.log.darwin.*
 
+@OptIn(ExperimentalForeignApi::class)
 public val darwinFrontend: LogFrontend = LogFrontend { tag ->
     val log = darwin_log_create(tag.pkg, tag.name)
 
