@@ -6,19 +6,8 @@ on:
 
 jobs:
   create-staging-repository:
-    name: Create staging repository
-    runs-on: ubuntu-latest
-    outputs:
-      repository_id: ${{ steps.create.outputs.repository_id }}
-    steps:
-      - id: create
-        uses: nexus-actions/create-nexus-staging-repo@v1.1
-        with:
-          base_url: https://s01.oss.sonatype.org/service/local/
-          username: ${{ secrets.SONATYPE_USERNAME }}
-          password: ${{ secrets.SONATYPE_PASSWORD }}
-          staging_profile_id: ${{ secrets.SONATYPE_PROFILE_ID }}
-          description: ${{ github.repository }}/${{ github.workflow }}#${{ github.run_number }}
+    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/create-nexus-staging-repository.yml@main
+    secrets: inherit
 
   build-upload:
     needs: create-staging-repository
@@ -32,21 +21,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
-      - name: Check out
-        uses: actions/checkout@v2
-      - name: Cached Konan
-        uses: actions/cache@v2
-        with:
-          path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-konan-
-      - name: Cached Gradle
-        uses: gradle/gradle-build-action@749f47bda3e44aa060e82d7b3ef7e40d953bd629 #v2
-      - name: Set up JDK 17
-        uses: actions/setup-java@de1bb2b0c5634f0fc4438d7aa9944e68f9bf86cc #v3
-        with:
-          java-version: 17
-          distribution: 'temurin'
+      - name: Setup
+        uses: kosi-libs/kodein-internal-github-actions/setup@main
       # Host only for MacOS / Windows
       - name: Check (macos / windows)
         if: matrix.os != 'ubuntu-latest'
@@ -66,24 +42,11 @@ jobs:
         run: ./gradlew publishAllPublicationsToOssrhStagingRepository -Porg.kodein.sonatype.repositoryId=${{ needs.create-staging-repository.outputs.repository_id }}
         shell: bash
 
-  drop-or-release:
+  drop-or-release-staging-repository:
     needs: [create-staging-repository, build-upload]
-    runs-on: ubuntu-latest
     if: ${{ always() && needs.create-staging-repository.result == 'success' }}
-    steps:
-      - name: Discard
-        if: ${{ needs.build-upload.result != 'success' }}
-        uses: nexus-actions/drop-nexus-staging-repo@v1
-        with:
-          base_url: https://s01.oss.sonatype.org/service/local/
-          username: ${{ secrets.SONATYPE_USERNAME }}
-          password: ${{ secrets.SONATYPE_PASSWORD }}
-          staging_repository_id: ${{ needs.create-staging-repository.outputs.repository_id }}
-      - name: Release
-        if: ${{ needs.build-upload.result == 'success' }}
-        uses: nexus-actions/release-nexus-staging-repo@v1
-        with:
-          base_url: https://s01.oss.sonatype.org/service/local/
-          username: ${{ secrets.SONATYPE_USERNAME }}
-          password: ${{ secrets.SONATYPE_PASSWORD }}
-          staging_repository_id: ${{ needs.create-staging-repository.outputs.repository_id }}
+    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/drop-or-release-nexus-staging-repository.yml@main
+    secrets: inherit
+    with:
+      repository-id: ${{ needs.create-staging-repository.outputs.repository-id }}
+      build-upload-result: ${{ needs.build-upload.result }}
