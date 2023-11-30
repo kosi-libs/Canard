@@ -48,5 +48,5 @@ jobs:
     uses: kosi-libs/kodein-internal-github-actions/.github/workflows/drop-or-release-nexus-staging-repository.yml@main
     secrets: inherit
     with:
-      repository-id: ${{ needs.create-staging-repository.outputs.repository-id }}
+      repository-id: ${{ needs.create-staging-repository.outputs.repository_id }}
       build-upload-result: ${{ needs.build-upload.result }}
