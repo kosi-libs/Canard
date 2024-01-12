@@ -1,14 +1,14 @@
 [[install]]
 = Install
 
-IMPORTANT: *_Canard_* uses the new gradle native dependency model.
-            Thus, we highly recommend to use Gradle 6 or higher.
+IMPORTANT: *_Canard_* uses the new Gradle native dependency model.
+            Thus, we highly recommend using Gradle 6 or higher.
 
 [[install-kmp]]
 == Kotlin/Multiplatform
 
 NOTE: Canard supports the following targets: +
-jvm, iosArm32, iosArm64, iosX64, JS, tvosarm64, tvosx64, watchosarm32, watchosarm64, watchosx86, linuxArm32Hfp, linuxMips32, linuxMipsel32, linuxX64, macosX64, mingwX64.
+jvm, iosArm32, iosArm64, iosX64, JS, tvosarm64, tvosx64, watchosarm32, watchosarm64, watchosx86, linuxArm32Hfp, linuxMips32, linuxMipsel32, linuxX64, macosX64, mingwX64, wasmJs.
 
 NOTE: Since Kotlin 1.8, legacy backend has been deprecated, thus starting from 0.17.0, Canard is only available for JS-IR.
 
