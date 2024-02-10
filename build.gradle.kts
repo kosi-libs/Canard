@@ -4,5 +4,5 @@ plugins {
 
 allprojects {
     group = "org.kodein.log"
-    version = "1.1.1"
+    version = "1.1.2"
 }

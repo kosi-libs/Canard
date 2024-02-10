@@ -18,7 +18,7 @@ public val androidFrontend: LogFrontend = LogFrontend { tag ->
                 Log.i(tag.toString(), message, entry.ex)
             }
             Logger.Level.DEBUG -> {
-                Log.v(tag.toString(), message, entry.ex)
+                Log.d(tag.toString(), message, entry.ex)
             }
         }
     }
