@@ -6,7 +6,7 @@ kotlin.kodein {
     allNative()
     js()
     wasmJs()
-//    wasmWasi()
+    wasmWasi()
 
     jvm {
         target.setCompileClasspath()

@@ -25,7 +25,6 @@ private fun wasiGetTime(clockId: Int): Long = withScopedMemoryAllocator { alloca
 
 public actual fun now(): Timestamp = Timestamp(wasiGetTime(0).toULong())
 
-@Suppress("LocalVariableName")
 public actual fun Timestamp.toLocalString(): String =
     TODO("$msecSinceEpoch")
 

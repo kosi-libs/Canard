@@ -1,5 +1,5 @@
 [versions]
-kotlinx-datetime = "0.4.1"
+kotlinx-datetime = "0.6.0-R2"
 slf4j = "1.7.36"
 
 [libraries]
