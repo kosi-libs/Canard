@@ -1,5 +1,4 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.kodein.log/canard)](https://mvnrepository.com/artifact/org.kodein.log/canard)
-[![Kotlin](https://img.shields.io/badge/Kotlin-1.9.21-blue.svg?style=flat&logo=kotlin)](https://kotlinlang.org)
 ![Github Actions](https://github.com/kosi-libs/Canard/actions/workflows/snapshot.yml/badge.svg)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/kosi-libs/Canard/blob/master/LICENSE.txt)
 [![Slack channel](https://img.shields.io/badge/Chat-Slack-green.svg?style=flat&logo=slack)](https://kotlinlang.slack.com/messages/kodein/)
