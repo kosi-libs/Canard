@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       SONATYPE_USERNAME: ${{ secrets.sonatype_username }}
-      SONATYPE_PASSWORD: ${{ secrets.sonatype_password }}
+      SONATYPE_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASSWORD }}
     strategy:
       matrix:
         os: [ubuntu-latest, macOS-latest, windows-latest]
