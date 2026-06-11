@@ -1,3 +1,5 @@
+@file:OptIn(kotlin.wasm.ExperimentalWasmInterop::class)
+
 package org.kodein.log
 
 import kotlin.wasm.WasmImport
