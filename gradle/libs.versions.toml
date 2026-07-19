@@ -1,6 +1,6 @@
 [versions]
-kotlinx-datetime = "0.6.0-R2"
-slf4j = "1.7.36"
+kotlinx-datetime = "0.8.0"
+slf4j = "2.0.18"
 
 [libraries]
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }

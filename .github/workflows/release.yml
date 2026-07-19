@@ -6,7 +6,7 @@ on:
 
 jobs:
   create-staging-repository:
-    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/create-nexus-staging-repository.yml@main
+    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/create-nexus-staging-repository.yml@v1.1.0
     secrets: inherit
 
   build-upload:
@@ -22,7 +22,7 @@ jobs:
         os: [ubuntu-latest, macOS-latest, windows-latest]
     steps:
       - name: Setup
-        uses: kosi-libs/kodein-internal-github-actions/setup@main
+        uses: kosi-libs/kodein-internal-github-actions/setup@v1.1.0
       # Host only for MacOS / Windows
       - name: Check (macos / windows)
         if: matrix.os != 'ubuntu-latest'
@@ -45,7 +45,7 @@ jobs:
   drop-or-release-staging-repository:
     needs: [create-staging-repository, build-upload]
     if: ${{ always() && needs.create-staging-repository.result == 'success' }}
-    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/drop-or-release-nexus-staging-repository.yml@main
+    uses: kosi-libs/kodein-internal-github-actions/.github/workflows/drop-or-release-nexus-staging-repository.yml@v1.1.0
     secrets: inherit
     with:
       repository-id: ${{ needs.create-staging-repository.outputs.repository-id }}
