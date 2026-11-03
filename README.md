@@ -54,6 +54,10 @@ logger.warning { "... the Canard documentation!" }
 
 See **[Canard documentation](https://kosi-libs.org/canard/)**.
 
+## Developped by
+
+[![Kodein Koders logo.](https://kodein-koders.com/app/uploads/2026/11/colored-invert.svg)](https://kodein-koders.com)
+
 ## Supported by
 
 [![JetBrains logo.](https://resources.jetbrains.com/storage/products/company/brand/logos/jetbrains.svg)](https://jb.gg/OpenSourceSupport)
